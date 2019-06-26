@@ -282,7 +282,6 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
             
             pillarData![skill-1].level -= 1
             pillarData![skill-1].progress = secondToMaxVal
-            print("pillarData![skill-1].progress = \(pillarData![skill-1].progress)")
             setupTemple()
             
         } else {
@@ -350,6 +349,8 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
             
         })
         
+        checkForDailyCompletion()
+        
         pillarsTableView.reloadData()
 
     }
@@ -361,10 +362,8 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         dailyChecklist![skillNumber - 1] = false
         
         let decrementedValue = pillarData![skillNumber - 1].progress - (1.0 / (Float(pillarData![skillNumber-1].daysToComplete)/Float(MAX_PILLAR_LEVEL)))
-        print(decrementedValue)
         
         if (decrementedValue < 0) {
-            print("here")
             self.downgradeTemple(skill: skillNumber)
         } else {
             pillarData![skillNumber - 1].progress = decrementedValue
@@ -414,6 +413,27 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
             })
             delay += 0.04
         }
+    }
+    
+    func checkForDailyCompletion() {
+        if dayIsComplete() {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5, execute: {
+                let alert = UIAlertController(title: "Well Done", message: "You completed every habit today! Relax and enjoy the rest of your day.", preferredStyle: .alert)
+                
+                alert.addAction(UIAlertAction(title: "Close", style: .default, handler: nil))
+                
+                self.present(alert, animated: true)
+            })
+        }
+    }
+    
+    func dayIsComplete() -> Bool {
+        for myBool in dailyChecklist! {
+            if !myBool {
+                return false
+            }
+        }
+        return true
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {

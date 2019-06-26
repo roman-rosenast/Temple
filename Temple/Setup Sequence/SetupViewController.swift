@@ -42,18 +42,21 @@ class SetupViewController: UIViewController, UIScrollViewDelegate {
 
         let page1: SetupStepVC = addSetupStep(setupNumber: 1) as! Setup1VC
         let page2: SetupStepVC = addSetupStep(setupNumber: 2) as! Setup2VC
+        
+        let page2b: SetupStepVC = addSetupStep(setupNumber: 2) as! Setup2bVC
+        
         let page3: SetupStepVC = addSetupStep(setupNumber: 3) as! Setup3VC
         let page4: SetupStepVC = addSetupStep(setupNumber: 4) as! Setup4VC
         let page5: SetupStepVC = addSetupStep(setupNumber: 5) as! Setup5VC
         pages = [page1, page2, page3, page4, page5]
         
-        let views: [String: UIView] = ["view": view, "page1": page1.view, "page2": page2.view, "page3": page3.view, "page4": page4.view, "page5": page5.view]
+        let views: [String: UIView] = ["view": view, "page1": page1.view, "page2": page2.view, "page2b": page2b.view, "page3": page3.view, "page4": page4.view, "page5": page5.view]
         
         let verticalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "V:|[page1(==view)]|", options: [], metrics: nil, views: views)
-        let horizontalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:|[page1(==view)][page2(==view)][page3(==view)][page4(==view)][page5(==view)]|", options: [.alignAllTop, .alignAllBottom], metrics: nil, views: views)
+        let horizontalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:|[page1(==view)][page2(==view)][page2b(==view)][page3(==view)][page4(==view)][page5(==view)]|", options: [.alignAllTop, .alignAllBottom], metrics: nil, views: views)
         NSLayoutConstraint.activate(verticalConstraints + horizontalConstraints)
         
-        pageControl.numberOfPages = 5
+        pageControl.numberOfPages = 6
         
     }
     
@@ -81,6 +84,7 @@ class SetupViewController: UIViewController, UIScrollViewDelegate {
     func updateTables() {
         pages[2].reloadTable()
         pages[3].reloadTable()
+        pages[4].reloadTable()
     }
     
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
