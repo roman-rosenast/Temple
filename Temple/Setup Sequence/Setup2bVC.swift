@@ -8,7 +8,7 @@
 
 import UIKit
 
-class Setup2bVC: SetupStepVC, UITableViewDelegate, UITableViewDataSource {
+class Setup3VC: SetupStepVC, UITableViewDelegate, UITableViewDataSource {
 
     @IBOutlet weak var tableView: UITableView!
     

@@ -10,7 +10,7 @@ import UIKit
 import FirebaseDatabase
 import FirebaseAuth
 
-class ViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UITabBarDelegate {
+class ViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UITabBarDelegate, UIGestureRecognizerDelegate {
 
     @IBOutlet var pillarsTableView: UITableView!
     @IBOutlet weak var mainTabBar: UITabBar!
@@ -53,6 +53,19 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     
     var pillarData: [Pillar]?
     var dailyChecklist: [Bool]?
+    var streaks: [Int]?
+    
+//    Description Views
+    let blackView = UIView()
+    
+    let collectionView: UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        cv.backgroundColor = .white
+        
+        return cv
+    }()
+//    End Description Views
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -74,6 +87,12 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         let timer = Timer(fireAt: date, interval: 0, target: self, selector: #selector(midnightReload), userInfo: nil, repeats: false)
         RunLoop.main.add(timer, forMode: RunLoop.Mode.common)
         
+        //Long Press
+        let longPressGesture:UILongPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress))
+        longPressGesture.minimumPressDuration = 0.5
+        longPressGesture.delegate = self
+        self.pillarsTableView.addGestureRecognizer(longPressGesture)
+                
     }
     
     @objc func midnightReload() {
@@ -209,6 +228,10 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         
         cell.templeComp = pillarData![indexPath.section].templeComp
         
+        if (streaks![indexPath.section] > 0) {
+            cell.PillarCellStreak.text = String(streaks![indexPath.section])
+        }
+
         return cell
         
     }
@@ -249,11 +272,104 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let cell: PillarTableViewCell = tableView.cellForRow(at: indexPath) as! PillarTableViewCell
-        
+//        showDescription(habit: 0)
         cell.animateSwipeHint()
     }
     
 //    END TABLE SECTION
+    
+    @objc func handleLongPress(longPressGesture:UILongPressGestureRecognizer) {
+        let p = longPressGesture.location(in: self.pillarsTableView)
+        let indexPath = self.pillarsTableView.indexPathForRow(at: p)
+        if indexPath == nil {
+            print("Long press on table view, not row.")
+        }
+        else if (longPressGesture.state == UIGestureRecognizer.State.began) {
+            showDescription(habit: indexPath!.section + 1)
+        }
+    }
+    
+    func showDescription(habit: Int) {
+        if let window = UIApplication.shared.keyWindow {
+            
+            let generator = UIImpactFeedbackGenerator(style: .light)
+            generator.impactOccurred()
+
+            blackView.backgroundColor = UIColor(white: 0, alpha: 0.5)
+
+            blackView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(dismissDescription)))
+
+            window.addSubview(blackView)
+            
+            let labelWidth = self.view.bounds.width - 100
+            let label = UILabel(frame: CGRect(x: self.view.center.x - labelWidth/2, y: 0, width: labelWidth, height: 250))
+            label.textAlignment = .center
+            let streakText = (streaks![habit - 1] > 0) ? "\(streaks![habit - 1]) Day Streak" : "No Current Streak"
+            label.attributedText = attributedText(myString: "\(pillarData![habit - 1].title)\n\(pillarData![habit - 1].description)\n\n\(streakText)\nThe \(pillarData![habit - 1].templeComp) of your Temple", habit: habit)
+            label.numberOfLines = 0
+            label.lineBreakMode = .byWordWrapping
+            
+            collectionView.addSubview(label)
+            
+            let imageWidth = 50
+            let icon = UIImageView(frame: CGRect(x: Int(self.view.center.x) - imageWidth/2, y: 15, width: imageWidth, height: imageWidth))
+            icon.image = pillarData![habit - 1].image
+            icon.layer.backgroundColor = pillarData![habit - 1].color.cgColor
+            icon.layer.masksToBounds = true
+            icon.layer.cornerRadius = 8 //icon.bounds.width/2
+            
+            collectionView.addSubview(icon)
+            
+            window.addSubview(collectionView)
+
+            let height: CGFloat = 250
+            let y = window.frame.height - height
+            collectionView.frame = CGRect(x: 0, y: window.frame.height, width: window.frame.width, height: height)
+
+            blackView.frame = window.frame
+            blackView.alpha = 0
+
+            UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+
+                self.blackView.alpha = 1
+
+                self.collectionView.frame = CGRect(x: 0, y: y, width: self.collectionView.frame.width, height: self.collectionView.frame.height)
+
+            }, completion: nil)
+        }
+    }
+
+    func attributedText(myString: String, habit: Int) -> NSAttributedString {
+        
+        let string = myString as NSString
+        
+        let attributedString = NSMutableAttributedString(string: string as String, attributes: [NSAttributedString.Key.font:UIFont.systemFont(ofSize: 15.0)])
+        
+        let boldFontAttribute = [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 15.0)]
+        let titleFontAttribute = [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 25.0)]
+        
+        // Part of string to be customized
+        attributedString.addAttributes(titleFontAttribute, range: string.range(of: "\(pillarData![habit - 1].title)"))
+        attributedString.addAttributes(boldFontAttribute, range: string.range(of: "The \(pillarData![habit - 1].templeComp) of your Temple"))
+        let streakText = (streaks![habit - 1] > 0) ? "\(streaks![habit - 1]) Day Streak" : "No Current Streak"
+        attributedString.addAttributes(boldFontAttribute, range: string.range(of: "\(streakText)"))
+        
+        return attributedString
+    }
+    
+    @objc func dismissDescription() {
+        UIView.animate(withDuration: 0.5, animations: {
+            self.blackView.alpha = 0
+            
+            if let window = UIApplication.shared.keyWindow {
+                self.collectionView.frame = CGRect(x: 0, y: window.frame.height, width: self.collectionView.frame.width, height: self.collectionView.frame.height)
+            }
+        }) {_ in
+            for subview in self.collectionView.subviews {
+                subview.removeFromSuperview()
+            }
+        }
+    }
     
     func upgradeTemple( skill: Int ) {
         readyToUpgrade = false
@@ -333,6 +449,8 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
             self.readyToUpgrade(myColor: self.pillarData![skillNumber - 1].color, skillTitle: self.pillarData![skillNumber - 1].templeComp)
         }
         
+        streaks![skillNumber - 1] += 1
+        
         //        Asynchronous backend data updating
         
         let db = Database.database().reference().child(String(Auth.auth().currentUser!.uid))
@@ -368,6 +486,8 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         } else {
             pillarData![skillNumber - 1].progress = decrementedValue
         }
+        
+        streaks![skillNumber - 1] -= 1
         
         //        Asynchronous backend data updating
         
@@ -442,18 +562,21 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
             let vc = segue.destination as? BuildViewController
             vc!.pillarData = pillarData
             vc!.dailyChecklist = dailyChecklist
+            vc!.streaks = streaks
         }
         
         else if (segue.destination.restorationIdentifier == "statsViewID") {
             let vc = segue.destination as? StatsViewController
             vc!.pillarData = pillarData
             vc!.dailyChecklist = dailyChecklist
+            vc!.streaks = streaks
         }
         
         else  { // transitioning to settings vc
             let vc = segue.destination as? SettingsViewController
             vc!.pillarData = pillarData
             vc!.dailyChecklist = dailyChecklist
+            vc!.streaks = streaks
         }
         
         
@@ -606,7 +729,8 @@ class PillarTableViewCell: UITableViewCell {
     @IBOutlet weak var PillarCellImage: UIImageView!
     @IBOutlet weak var PillarCellLabel: UILabel!
     @IBOutlet weak var PillarCellProgress: UIProgressView!
-
+    @IBOutlet weak var PillarCellStreak: UILabel!
+    
     @IBOutlet weak var PillarCellBehind: UIView!
     @IBOutlet weak var PillarCellBackground: UIView!
     
@@ -617,7 +741,7 @@ class PillarTableViewCell: UITableViewCell {
     override func layoutSubviews() {
         super.layoutSubviews()
         let longPressGesture:UILongPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(self.handleLongPress(_:)))
-        longPressGesture.minimumPressDuration = 0.5 // half second press
+        longPressGesture.minimumPressDuration = 1.5 // half second press
         longPressGesture.delegate = self
         self.addGestureRecognizer(longPressGesture)
     }
@@ -652,12 +776,14 @@ class PillarTableViewCell: UITableViewCell {
             self.PillarCellImage.transform = CGAffineTransform(translationX: self.swipeHintDistance, y: 0)
             self.PillarCellLabel.transform = CGAffineTransform(translationX: self.swipeHintDistance, y: 0)
             self.PillarCellBackground.transform = CGAffineTransform(translationX: self.swipeHintDistance, y: 0)
+            self.PillarCellStreak.transform = CGAffineTransform(translationX: self.swipeHintDistance, y: 0)
         }) { (success) in
             UIView.animate(withDuration: 0.1, delay: 0, options: [.curveLinear], animations: {
                 self.PillarCellProgress.transform = .identity
                 self.PillarCellImage.transform = .identity
                 self.PillarCellLabel.transform = .identity
                 self.PillarCellBackground.transform = .identity
+                self.PillarCellStreak.transform = .identity
             })
         }
     }

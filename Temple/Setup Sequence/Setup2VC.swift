@@ -133,7 +133,7 @@ class Setup2VC: SetupStepVC, UITableViewDelegate, UITableViewDataSource, UITextF
             }
         }
         if (weAreGoodToGo) {
-            pvc?.setupPillars.insert(Pillar(title: addCustomHabit.text!, image: UIImage(named: "Other_Icon")!, progress: 0, level: 1, templeComp: "", color: UIColor(red:0.91, green:0.77, blue:0.93, alpha:1.0), daysToComplete: 12), at: 0)
+            pvc?.setupPillars.insert(Pillar(title: addCustomHabit.text!, image: UIImage(named: "Other_Icon")!, progress: 0, level: 1, templeComp: "", color: UIColor(red:0.91, green:0.77, blue:0.93, alpha:1.0), daysToComplete: 12, description: "Description of \(addCustomHabit.text!)"), at: 0)
         }
         addCustomHabit.text = "Add Your Own Habit"
         tableView.reloadData()

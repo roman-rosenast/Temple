@@ -15,6 +15,7 @@ class LoadingViewController: UIViewController {
     
     var dailyChecklist = Array(repeating: false, count: 5)
     var pillarData = [Pillar]()
+    var streaks = [Int]()
     
     var ViewController: UIViewController?
     
@@ -36,6 +37,7 @@ class LoadingViewController: UIViewController {
             let vc = segue.destination as! ViewController
             vc.dailyChecklist = dailyChecklist
             vc.pillarData = pillarData
+            vc.streaks = streaks
         }
     }
     
@@ -105,7 +107,8 @@ class LoadingViewController: UIViewController {
                     "Level": 1,
                     "Progress": 0.0,
                     "Skill": newConfig[0].title,
-                    "Temple Component": newConfig[0].templeComp
+                    "Temple Component": newConfig[0].templeComp,
+                    "Description": newConfig[0].description
                 ],
                 "Pillar2": [
                     "Color": [
@@ -118,7 +121,8 @@ class LoadingViewController: UIViewController {
                     "Level": 1,
                     "Progress": 0.0,
                     "Skill": newConfig[1].title,
-                    "Temple Component": newConfig[1].templeComp
+                    "Temple Component": newConfig[1].templeComp,
+                    "Description": newConfig[1].description
                 ],
                 "Pillar3": [
                     "Color": [
@@ -131,7 +135,8 @@ class LoadingViewController: UIViewController {
                     "Level": 1,
                     "Progress": 0.0,
                     "Skill": newConfig[2].title,
-                    "Temple Component": newConfig[2].templeComp
+                    "Temple Component": newConfig[2].templeComp,
+                    "Description": newConfig[2].description
                 ],
                 "Pillar4": [
                     "Color": [
@@ -144,7 +149,8 @@ class LoadingViewController: UIViewController {
                     "Level": 1,
                     "Progress": 0.0,
                     "Skill": newConfig[3].title,
-                    "Temple Component": newConfig[3].templeComp
+                    "Temple Component": newConfig[3].templeComp,
+                    "Description": newConfig[3].description
                 ],
                 "Pillar5": [
                     "Color": [
@@ -157,14 +163,15 @@ class LoadingViewController: UIViewController {
                     "Level": 1,
                     "Progress": 0.0,
                     "Skill": newConfig[4].title,
-                    "Temple Component": newConfig[4].templeComp
+                    "Temple Component": newConfig[4].templeComp,
+                    "Description": newConfig[4].description
                 ],
             ]
         ]
         db.child(String(Auth.auth().currentUser!.uid)).setValue(starterDict)
     }
     
-    func fetchData(completion: @escaping ( ([Pillar], [Bool])) -> Void) {
+    func fetchData(completion: @escaping ( ([Pillar], [Bool], [Int])) -> Void) {
         let db = Database.database().reference().child(String(Auth.auth().currentUser!.uid))
         db.observeSingleEvent(of: .value, with: { (snapshot) in
             
@@ -281,7 +288,8 @@ class LoadingViewController: UIViewController {
                                         level: temp?["Level"] as! Int,
                                         templeComp: temp?["Temple Component"] as! String,
                                         color: UIColor(red: tempColor!["R"]!, green: tempColor!["G"]!, blue: tempColor!["B"]!, alpha: 1),
-                                        daysToComplete: temp?["Days To Complete"] as! Int
+                                        daysToComplete: temp?["Days To Complete"] as! Int,
+                                        description: temp?["Description"] as! String
                 )
                 
                 self.pillarData.append(tempPillar)
@@ -289,8 +297,41 @@ class LoadingViewController: UIViewController {
             }
             
             //                 Done Updating Configuration
+            //                 Populate Streaks Array
+            
+            if (history!["CurrentDay"] as! Int == 1) { // No Streaks if its the first day
+                self.streaks = [0, 0, 0, 0, 0]
+            } else {
+                for index in 1...5 {
+                    
+                    let skillBool = "P" + String(index) + "Completed"
+                    
+                    var myDay = history!["CurrentDay"] as! Int - 1
+                    var myDayStr = "Day" + String(myDay)
+                    var myDayDict = history![myDayStr] as? [String: Any]
+                    var skillStatus = myDayDict![skillBool] as? String ?? ""
+
+                    var currentStreak = 0
+                    while (skillStatus == "True" && myDay > 0) {
+                        
+                        myDay -= 1
+                        myDayStr = "Day" + String(myDay)
+                        myDayDict = history![myDayStr] as? [String: Any]
+                        skillStatus = myDayDict![skillBool] as? String ?? ""
+                        
+                        currentStreak += 1
+                    }
+                    
+                    if (self.dailyChecklist[index-1]) { currentStreak += 1} // Handle user having completed habit that day
+                    
+                    self.streaks.append(currentStreak)
+                    
+                }
+            }
+            
+            //                  Done Populating Streaks Array
         
-            completion((self.pillarData, self.dailyChecklist))
+            completion((self.pillarData, self.dailyChecklist, self.streaks))
             
             
         })

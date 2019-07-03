@@ -18,22 +18,19 @@ class SetupViewController: UIViewController, UIScrollViewDelegate {
     var myConfiguration = [Pillar]()
     
     var setupPillars = [
-        Pillar(title: "Meditation", image: UIImage(named: "Meditation_Icon")!, progress: 0, level: 1, templeComp: "", color: UIColor(red:0.98, green:0.41, blue:0.00, alpha:1.0)
-, daysToComplete: 12),
-        Pillar(title: "Exercise", image: UIImage(named: "Exercise_Icon")!, progress: 0, level: 1, templeComp: "", color: UIColor(red:0.95, green:0.53, blue:0.19, alpha:1.0)
-, daysToComplete: 12),
-        Pillar(title: "Diet", image: UIImage(named: "Diet_Icon")!, progress: 0, level: 1, templeComp: "", color: UIColor(red:0.88, green:0.89, blue:0.80, alpha:1.0)
-, daysToComplete: 12),
-        Pillar(title: "Sleep", image: UIImage(named: "Sleep_Icon")!, progress: 0, level: 1, templeComp: "", color: UIColor(red:0.65, green:0.86, blue:0.85, alpha:1.0), daysToComplete: 12),
-        Pillar(title: "Hydration", image: UIImage(named: "Hydration_Icon")!, progress: 0, level: 1, templeComp: "", color: UIColor(red:0.41, green:0.82, blue:0.91, alpha:1.0), daysToComplete: 12),
-        Pillar(title: "Family", image: UIImage(named: "Family_Icon")!, progress: 0, level: 1, templeComp: "", color: UIColor(red:0.23, green:0.54, blue:0.41, alpha:1.0), daysToComplete: 12),
-        Pillar(title: "Language", image: UIImage(named: "Language_Icon")!, progress: 0, level: 1, templeComp: "", color: UIColor(red:0.33, green:0.47, blue:0.48, alpha:1.0), daysToComplete: 12),
-        Pillar(title: "Yoga", image: UIImage(named: "Yoga_Icon")!, progress: 0, level: 1, templeComp: "", color: UIColor(red:0.93, green:0.82, blue:0.47, alpha:1.0), daysToComplete: 12),
+        Pillar(title: "Meditation", image: UIImage(named: "Meditation_Icon")!, progress: 0, level: 1, templeComp: "", color: UIColor(red:0.98, green:0.41, blue:0.00, alpha:1.0), daysToComplete: 12, description: "Meditate for 10 minutes"),
+        Pillar(title: "Exercise", image: UIImage(named: "Exercise_Icon")!, progress: 0, level: 1, templeComp: "", color: UIColor(red:0.95, green:0.53, blue:0.19, alpha:1.0), daysToComplete: 12, description: "Do something active for 20 minutes"),
+        Pillar(title: "Diet", image: UIImage(named: "Diet_Icon")!, progress: 0, level: 1, templeComp: "", color: UIColor(red:0.88, green:0.89, blue:0.80, alpha:1.0), daysToComplete: 12, description: "Do not eat any junk food"),
+        Pillar(title: "Sleep", image: UIImage(named: "Sleep_Icon")!, progress: 0, level: 1, templeComp: "", color: UIColor(red:0.65, green:0.86, blue:0.85, alpha:1.0), daysToComplete: 12, description: "Sleep 8 hours"),
+        Pillar(title: "Hydration", image: UIImage(named: "Hydration_Icon")!, progress: 0, level: 1, templeComp: "", color: UIColor(red:0.41, green:0.82, blue:0.91, alpha:1.0), daysToComplete: 12, description: "Drink 2 bottles of water"),
+        Pillar(title: "Family", image: UIImage(named: "Family_Icon")!, progress: 0, level: 1, templeComp: "", color: UIColor(red:0.23, green:0.54, blue:0.41, alpha:1.0), daysToComplete: 12, description: "Devote 10 minutes to your family"),
+        Pillar(title: "Language", image: UIImage(named: "Language_Icon")!, progress: 0, level: 1, templeComp: "", color: UIColor(red:0.33, green:0.47, blue:0.48, alpha:1.0), daysToComplete: 12, description: "Have a conversation in another language"),
+        Pillar(title: "Yoga", image: UIImage(named: "Yoga_Icon")!, progress: 0, level: 1, templeComp: "", color: UIColor(red:0.93, green:0.82, blue:0.47, alpha:1.0), daysToComplete: 12, description: "Do a sun salutation"),
         
-        Pillar(title: "Read", image: UIImage(named: "Read_Icon")!, progress: 0, level: 1, templeComp: "", color: UIColor(red:0.23, green:0.54, blue:0.41, alpha:1.0), daysToComplete: 12),
-        Pillar(title: "Save", image: UIImage(named: "Save_Icon")!, progress: 0, level: 1, templeComp: "", color: UIColor(red:0.85, green:0.36, blue:0.26, alpha:1.0), daysToComplete: 12),
-        Pillar(title: "Floss", image: UIImage(named: "Floss_Icon")!, progress: 0, level: 1, templeComp: "", color: UIColor(red:0.81, green:0.94, blue:0.62, alpha:1.0), daysToComplete: 12),
-        Pillar(title: "Journal", image: UIImage(named: "Journal_Icon")!, progress: 0, level: 1, templeComp: "", color: UIColor(red:0.07, green:0.44, blue:0.65, alpha:1.0), daysToComplete: 12)
+        Pillar(title: "Read", image: UIImage(named: "Read_Icon")!, progress: 0, level: 1, templeComp: "", color: UIColor(red:0.23, green:0.54, blue:0.41, alpha:1.0), daysToComplete: 12, description: "Read for 20 minutes"),
+        Pillar(title: "Save", image: UIImage(named: "Save_Icon")!, progress: 0, level: 1, templeComp: "", color: UIColor(red:0.85, green:0.36, blue:0.26, alpha:1.0), daysToComplete: 12, description: "Do not buy anything unnecessary"),
+        Pillar(title: "Floss", image: UIImage(named: "Floss_Icon")!, progress: 0, level: 1, templeComp: "", color: UIColor(red:0.81, green:0.94, blue:0.62, alpha:1.0), daysToComplete: 12, description: "Floss your teeth"),
+        Pillar(title: "Journal", image: UIImage(named: "Journal_Icon")!, progress: 0, level: 1, templeComp: "", color: UIColor(red:0.07, green:0.44, blue:0.65, alpha:1.0), daysToComplete: 12, description: "Log today in your journal")
     ]
     
     override func viewDidLoad() {
@@ -42,25 +39,23 @@ class SetupViewController: UIViewController, UIScrollViewDelegate {
 
         let page1: SetupStepVC = addSetupStep(setupNumber: 1) as! Setup1VC
         let page2: SetupStepVC = addSetupStep(setupNumber: 2) as! Setup2VC
-        
-        let page2b: SetupStepVC = addSetupStep(setupNumber: 2) as! Setup2bVC
-        
         let page3: SetupStepVC = addSetupStep(setupNumber: 3) as! Setup3VC
         let page4: SetupStepVC = addSetupStep(setupNumber: 4) as! Setup4VC
         let page5: SetupStepVC = addSetupStep(setupNumber: 5) as! Setup5VC
-        pages = [page1, page2, page3, page4, page5]
+        let page6: SetupStepVC = addSetupStep(setupNumber: 6) as! Setup6VC
+        pages = [page1, page2, page3, page4, page5, page6]
         
-        let views: [String: UIView] = ["view": view, "page1": page1.view, "page2": page2.view, "page2b": page2b.view, "page3": page3.view, "page4": page4.view, "page5": page5.view]
+        let views: [String: UIView] = ["view": view, "page1": page1.view, "page2": page2.view, "page3": page3.view, "page4": page4.view, "page5": page5.view, "page6": page6.view]
         
         let verticalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "V:|[page1(==view)]|", options: [], metrics: nil, views: views)
-        let horizontalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:|[page1(==view)][page2(==view)][page2b(==view)][page3(==view)][page4(==view)][page5(==view)]|", options: [.alignAllTop, .alignAllBottom], metrics: nil, views: views)
+        let horizontalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:|[page1(==view)][page2(==view)][page3(==view)][page4(==view)][page5(==view)][page6(==view)]|", options: [.alignAllTop, .alignAllBottom], metrics: nil, views: views)
         NSLayoutConstraint.activate(verticalConstraints + horizontalConstraints)
         
         pageControl.numberOfPages = 6
         
     }
     
-    //    Plan: call method whenever a swipe is registered that updates the tableviews of Setup3VC and Setup4VC
+    //    Calls method whenever a swipe is registered that updates the tableviews of Setup4VC and Setup5VC
     var previousPageXOffset: CGFloat = 0.0
     
     func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
@@ -70,7 +65,7 @@ class SetupViewController: UIViewController, UIScrollViewDelegate {
         if targetOffset.x == previousPageXOffset {
             // page will not change
         } else if targetOffset.x < previousPageXOffset {
-            // scroll view will page left
+            updateTables()
         } else if targetOffset.x > previousPageXOffset {
             updateTables()
         }

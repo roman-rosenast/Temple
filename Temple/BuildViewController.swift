@@ -15,6 +15,7 @@ class BuildViewController: UIViewController  {
     
     var pillarData: [Pillar]?
     var dailyChecklist: [Bool]?
+    var streaks: [Int]?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,6 +42,7 @@ class BuildViewController: UIViewController  {
         let vc = segue.destination as! ViewController
         vc.pillarData = pillarData
         vc.dailyChecklist = dailyChecklist
+        vc.streaks = streaks
     }
 
 }

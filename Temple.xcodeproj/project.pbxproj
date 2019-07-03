@@ -18,12 +18,12 @@
 		9C71C83F22A1CF5D0035595F /* Roboto-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9C71C83922A1CF350035595F /* Roboto-Light.ttf */; };
 		9C71C84022A1CF5D0035595F /* Roboto-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9C71C83A22A1CF350035595F /* Roboto-Regular.ttf */; };
 		9C71C84222A48A590035595F /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9C71C84122A48A590035595F /* GoogleService-Info.plist */; };
-		9CF8F8EB22C2FB8C0048517F /* Setup2bVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CF8F8EA22C2FB8C0048517F /* Setup2bVC.swift */; };
+		9CF8F8EF22C3015B0048517F /* Setup3VC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CF8F8EE22C3015B0048517F /* Setup3VC.swift */; };
 		9CFB192022B5CF7100ED02EB /* Setup1VC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CFB191F22B5CF7100ED02EB /* Setup1VC.swift */; };
 		9CFB192222B5CF8800ED02EB /* Setup2VC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CFB192122B5CF8800ED02EB /* Setup2VC.swift */; };
-		9CFB192422B5CFA000ED02EB /* Setup3VC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CFB192322B5CFA000ED02EB /* Setup3VC.swift */; };
-		9CFB192622B5CFAA00ED02EB /* Setup4VC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CFB192522B5CFAA00ED02EB /* Setup4VC.swift */; };
-		9CFB192822B5CFB500ED02EB /* Setup5VC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CFB192722B5CFB500ED02EB /* Setup5VC.swift */; };
+		9CFB192422B5CFA000ED02EB /* Setup4VC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CFB192322B5CFA000ED02EB /* Setup4VC.swift */; };
+		9CFB192622B5CFAA00ED02EB /* Setup5VC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CFB192522B5CFAA00ED02EB /* Setup5VC.swift */; };
+		9CFB192822B5CFB500ED02EB /* Setup6VC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CFB192722B5CFB500ED02EB /* Setup6VC.swift */; };
 		9CFB192A22B5D0CE00ED02EB /* SetupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CFB192922B5D0CE00ED02EB /* SetupViewController.swift */; };
 		9CFB192C22B5D6A200ED02EB /* SetupStepVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CFB192B22B5D6A200ED02EB /* SetupStepVC.swift */; };
 		9CFD64FC22A9CAFF00422165 /* LoadingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CFD64FB22A9CAFF00422165 /* LoadingViewController.swift */; };
@@ -50,12 +50,12 @@
 		9C71C83C22A1CF350035595F /* Roboto-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-Bold.ttf"; sourceTree = "<group>"; };
 		9C71C84122A48A590035595F /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		9CBDA0B3138BBA3B61956155 /* Pods_Temple.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Temple.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		9CF8F8EA22C2FB8C0048517F /* Setup2bVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Setup2bVC.swift; sourceTree = "<group>"; };
+		9CF8F8EE22C3015B0048517F /* Setup3VC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Setup3VC.swift; sourceTree = "<group>"; };
 		9CFB191F22B5CF7100ED02EB /* Setup1VC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Setup1VC.swift; sourceTree = "<group>"; };
 		9CFB192122B5CF8800ED02EB /* Setup2VC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Setup2VC.swift; sourceTree = "<group>"; };
-		9CFB192322B5CFA000ED02EB /* Setup3VC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Setup3VC.swift; sourceTree = "<group>"; };
-		9CFB192522B5CFAA00ED02EB /* Setup4VC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Setup4VC.swift; sourceTree = "<group>"; };
-		9CFB192722B5CFB500ED02EB /* Setup5VC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Setup5VC.swift; sourceTree = "<group>"; };
+		9CFB192322B5CFA000ED02EB /* Setup4VC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Setup4VC.swift; sourceTree = "<group>"; };
+		9CFB192522B5CFAA00ED02EB /* Setup5VC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Setup5VC.swift; sourceTree = "<group>"; };
+		9CFB192722B5CFB500ED02EB /* Setup6VC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Setup6VC.swift; sourceTree = "<group>"; };
 		9CFB192922B5D0CE00ED02EB /* SetupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupViewController.swift; sourceTree = "<group>"; };
 		9CFB192B22B5D6A200ED02EB /* SetupStepVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupStepVC.swift; sourceTree = "<group>"; };
 		9CFD64FB22A9CAFF00422165 /* LoadingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingViewController.swift; sourceTree = "<group>"; };
@@ -115,13 +115,13 @@
 			isa = PBXGroup;
 			children = (
 				9CFB191E22B5CED300ED02EB /* Setup Sequence */,
-				9C71C81522A078CD0035595F /* AppDelegate.swift */,
-				9C71C81722A078CD0035595F /* ViewController.swift */,
 				9C71C81922A078CD0035595F /* Main.storyboard */,
+				9C71C81522A078CD0035595F /* AppDelegate.swift */,
+				9CFD64FB22A9CAFF00422165 /* LoadingViewController.swift */,
+				9C71C81722A078CD0035595F /* ViewController.swift */,
 				9CFD650122B1D71E00422165 /* AuthViewController.swift */,
 				9CFD64FF22AB12C100422165 /* SettingsViewController.swift */,
 				9CFD64FD22AB0E3700422165 /* StatsViewController.swift */,
-				9CFD64FB22A9CAFF00422165 /* LoadingViewController.swift */,
 				9C0AB2D822A6F72D0049B3F5 /* BuildViewController.swift */,
 				9C71C81C22A078CE0035595F /* Assets.xcassets */,
 				9C71C81E22A078CE0035595F /* LaunchScreen.storyboard */,
@@ -148,10 +148,10 @@
 			children = (
 				9CFB191F22B5CF7100ED02EB /* Setup1VC.swift */,
 				9CFB192122B5CF8800ED02EB /* Setup2VC.swift */,
-				9CF8F8EA22C2FB8C0048517F /* Setup2bVC.swift */,
-				9CFB192322B5CFA000ED02EB /* Setup3VC.swift */,
-				9CFB192522B5CFAA00ED02EB /* Setup4VC.swift */,
-				9CFB192722B5CFB500ED02EB /* Setup5VC.swift */,
+				9CF8F8EE22C3015B0048517F /* Setup3VC.swift */,
+				9CFB192322B5CFA000ED02EB /* Setup4VC.swift */,
+				9CFB192522B5CFAA00ED02EB /* Setup5VC.swift */,
+				9CFB192722B5CFB500ED02EB /* Setup6VC.swift */,
 				9CFB192922B5D0CE00ED02EB /* SetupViewController.swift */,
 				9CFB192B22B5D6A200ED02EB /* SetupStepVC.swift */,
 			);
@@ -296,15 +296,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9CFB192822B5CFB500ED02EB /* Setup5VC.swift in Sources */,
+				9CFB192822B5CFB500ED02EB /* Setup6VC.swift in Sources */,
 				9C71C81822A078CD0035595F /* ViewController.swift in Sources */,
 				9CFB192C22B5D6A200ED02EB /* SetupStepVC.swift in Sources */,
-				9CF8F8EB22C2FB8C0048517F /* Setup2bVC.swift in Sources */,
 				9C0AB2D922A6F72D0049B3F5 /* BuildViewController.swift in Sources */,
+				9CF8F8EF22C3015B0048517F /* Setup3VC.swift in Sources */,
 				9C71C81622A078CD0035595F /* AppDelegate.swift in Sources */,
 				9CFD650222B1D71E00422165 /* AuthViewController.swift in Sources */,
-				9CFB192622B5CFAA00ED02EB /* Setup4VC.swift in Sources */,
-				9CFB192422B5CFA000ED02EB /* Setup3VC.swift in Sources */,
+				9CFB192622B5CFAA00ED02EB /* Setup5VC.swift in Sources */,
+				9CFB192422B5CFA000ED02EB /* Setup4VC.swift in Sources */,
 				9CFB192022B5CF7100ED02EB /* Setup1VC.swift in Sources */,
 				9CFB192222B5CF8800ED02EB /* Setup2VC.swift in Sources */,
 				9CFD64FE22AB0E3700422165 /* StatsViewController.swift in Sources */,
@@ -456,7 +456,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 6F0160FD16DA749E7CD043C5 /* Pods-Temple.debug.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-1";
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = S8SKFZ35DU;
 				INFOPLIST_FILE = Temple/Info.plist;
@@ -475,7 +475,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2F20B736600C39C7B01FDE2D /* Pods-Temple.release.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-1";
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = S8SKFZ35DU;
 				INFOPLIST_FILE = Temple/Info.plist;

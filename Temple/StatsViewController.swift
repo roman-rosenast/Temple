@@ -16,7 +16,7 @@ class StatsViewController: UIViewController, ChartViewDelegate {
 
     var pillarData: [Pillar]?
     var dailyChecklist: [Bool]?
-    
+    var streaks: [Int]?
     
     @IBOutlet weak var modalWindow: UIView!
     @IBOutlet weak var barChart: HorizontalBarChartView!
@@ -85,6 +85,7 @@ class StatsViewController: UIViewController, ChartViewDelegate {
         let vc = segue.destination as? ViewController
         vc!.pillarData = pillarData
         vc!.dailyChecklist = dailyChecklist
+        vc!.streaks = streaks
     }
     
     @IBAction func dismiss(_ sender: Any) {

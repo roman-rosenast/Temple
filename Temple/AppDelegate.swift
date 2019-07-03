@@ -11,6 +11,7 @@ import Firebase
 import FirebaseAuth
 import GoogleSignIn
 import UserNotifications
+import IQKeyboardManagerSwift
 
 //    GLOBAL APP DATA
 
@@ -24,6 +25,7 @@ struct Pillar {
     var templeComp: String
     var color: UIColor
     var daysToComplete: Int
+    var description: String
 }
 
 @UIApplicationMain
@@ -44,7 +46,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
         self.window?.rootViewController = initialViewController
         self.window?.makeKeyAndVisible()
         
+        
+        
         setupNotifications()
+
+        
+        IQKeyboardManager.shared.enable = true
         
         return true
     }
@@ -52,12 +59,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
     func setupNotifications() {
         let center = UNUserNotificationCenter.current()
         
-        center.requestAuthorization(options: [.alert, .badge, .sound]) { (granted, error) in
-            if granted {
-                print("Notification Authorization granted")
-                self.scheduleNotification()
-            } else {
-                print("Notification Authorization denied")
+        center.getPendingNotificationRequests { (notifications) in
+            if (notifications.count < 1) {
+                center.requestAuthorization(options: [.alert, .badge, .sound]) { (granted, error) in
+                    if granted {
+                        print("Notification Authorization granted")
+                        self.scheduleNotification()
+                    } else {
+                        print("Notification Authorization denied :(")
+                    }
+                }
             }
         }
     }
@@ -76,7 +87,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
         dateComponents.minute = 30
         let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
         
-        let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
+        let request = UNNotificationRequest(identifier: "Nightly Notification", content: content, trigger: trigger)
         center.add(request)
     }
     

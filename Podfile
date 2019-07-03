@@ -11,5 +11,6 @@ target 'Temple' do
 	pod 'Firebase/Auth'
   pod 'GoogleSignIn'
 	pod 'Charts'
+  pod 'IQKeyboardManagerSwift'
 	
 end

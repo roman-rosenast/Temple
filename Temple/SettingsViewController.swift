@@ -19,6 +19,7 @@ class SettingsViewController: UIViewController, UIGestureRecognizerDelegate {
     
     var pillarData: [Pillar]?
     var dailyChecklist: [Bool]?
+    var streaks: [Int]?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -40,10 +41,11 @@ class SettingsViewController: UIViewController, UIGestureRecognizerDelegate {
         
         resetButton.layer.cornerRadius = 8
         resetButton.clipsToBounds = true
-        resetButton.setTitle("Hold to Reset Your Temple", for: .normal)
-        resetButton.titleLabel?.numberOfLines = 0 // Dynamic number of lines
-        resetButton.titleLabel?.lineBreakMode = NSLineBreakMode.byWordWrapping
+//        resetButton.titleLabel?.lineBreakMode = NSLineBreakMode.byWordWrapping
+        resetButton.titleLabel?.numberOfLines = 4
         resetButton.titleLabel?.textAlignment = .center
+        resetButton.titleLabel?.minimumScaleFactor = 0.5
+        resetButton.titleLabel?.adjustsFontSizeToFitWidth = true
         
         let longPressGesture:UILongPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(self.handleLongPress(_:)))
         longPressGesture.minimumPressDuration = 2.0
@@ -56,6 +58,7 @@ class SettingsViewController: UIViewController, UIGestureRecognizerDelegate {
         let vc = segue.destination as? ViewController
         vc!.pillarData = pillarData
         vc!.dailyChecklist = dailyChecklist
+        vc!.streaks = streaks
     }
     
     @IBAction func dismiss(_ sender: Any) {
