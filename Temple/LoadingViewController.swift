@@ -22,6 +22,8 @@ class LoadingViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        setupDbRef()
+        
         Auth.auth().addStateDidChangeListener { auth, user in
             if user != nil {
                 self.loginDone()
@@ -42,8 +44,7 @@ class LoadingViewController: UIViewController {
     }
     
     func loginDone() {
-        let db = Database.database().reference()
-        db.observeSingleEvent(of: .value, with: { (snapshot) in
+        db!.observeSingleEvent(of: .value, with: { (snapshot) in
             
             var dataSnapshot = snapshot.value as? [String: Any]
         
@@ -68,8 +69,6 @@ class LoadingViewController: UIViewController {
     
     func addUserToDatabase(newConfig: [Pillar]) {
         print("addUser Called")
-        let db = Database.database().reference()
-
         // Step 1: Add user's id to top level of DB. Then add History and config starter dicts
         let myDate = Date.getDateStr(dateObj: self.dateFor(timeStamp: Date.getDateStr(dateObj: Date())) as Date)
         
@@ -168,12 +167,11 @@ class LoadingViewController: UIViewController {
                 ],
             ]
         ]
-        db.child(String(Auth.auth().currentUser!.uid)).setValue(starterDict)
+        currentTempledbRef!.setValue(starterDict)
     }
     
     func fetchData(completion: @escaping ( ([Pillar], [Bool], [Int])) -> Void) {
-        let db = Database.database().reference().child(String(Auth.auth().currentUser!.uid))
-        db.observeSingleEvent(of: .value, with: { (snapshot) in
+        currentTempledbRef!.observeSingleEvent(of: .value, with: { (snapshot) in
             
             var dataSnapshot = snapshot.value as? [String: Any]
             
@@ -208,13 +206,13 @@ class LoadingViewController: UIViewController {
                 
                 // Step 2: Add the first day that they missed with completions they got
                 //      Note that if there are mulitple missed days than every single once after the first will have no completions
-                db.child("History/CurrentDay").setValue(currentDay + 1)
+                currentTempledbRef!.child("History/CurrentDay").setValue(currentDay + 1)
                 
                 let dayAfterLastLog = Calendar.current.date(byAdding: .day, value: 1, to: lastLog as Date)
                 let dayAfterLastLogStr = Date.getDateStr(dateObj: dayAfterLastLog!)
                 
                 
-                db.child("History/Day\(currentDay + 1)").setValue(["Date": dayAfterLastLogStr,
+                currentTempledbRef!.child("History/Day\(currentDay + 1)").setValue(["Date": dayAfterLastLogStr,
                                                                    "P1Completed": "False",
                                                                    "P2Completed": "False",
                                                                    "P3Completed": "False",
@@ -229,7 +227,7 @@ class LoadingViewController: UIViewController {
                     
                     let nextDayStr = Date.getDateStr(dateObj: dateObjAccumulator!)
                     
-                    db.child("History/Day\(currentDay + dayAccumulator)").setValue(["Date": nextDayStr,
+                    currentTempledbRef!.child("History/Day\(currentDay + dayAccumulator)").setValue(["Date": nextDayStr,
                                                                                     "P1Completed": "False",
                                                                                     "P2Completed": "False",
                                                                                     "P3Completed": "False",
@@ -239,7 +237,7 @@ class LoadingViewController: UIViewController {
                     dayAccumulator += 1
                     dateObjAccumulator = Calendar.current.date( byAdding: .day, value: 1, to: (dateObjAccumulator)!)
                 }
-                db.child("History/CurrentDay").setValue(currentDay + dayAccumulator - 1)
+                currentTempledbRef!.child("History/CurrentDay").setValue(currentDay + dayAccumulator - 1)
                 
             }
             

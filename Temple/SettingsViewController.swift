@@ -84,8 +84,7 @@ class SettingsViewController: UIViewController, UIGestureRecognizerDelegate {
     }
     
     func resetTemple() {
-        let db = Database.database().reference().child(String(Auth.auth().currentUser!.uid))
-        db.setValue(nil)
+        currentTempledbRef.setValue(nil)
         
         if let storyboard = self.storyboard {
             let vc = storyboard.instantiateViewController(withIdentifier: "loadingViewController") as! LoadingViewController

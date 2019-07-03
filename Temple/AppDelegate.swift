@@ -17,6 +17,9 @@ import IQKeyboardManagerSwift
 
 let MAX_PILLAR_LEVEL: Int = 4
 
+var db: DatabaseReference?
+var currentTempledbRef: DatabaseReference?
+
 struct Pillar {
     var title: String
     var image: UIImage
@@ -46,10 +49,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
         self.window?.rootViewController = initialViewController
         self.window?.makeKeyAndVisible()
         
-        
-        
         setupNotifications()
-
         
         IQKeyboardManager.shared.enable = true
         
@@ -150,6 +150,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
             }
             // User is signed in
             print("user logged in email \(user.profile.email)")
+            setupDbRef()
             let mainStoryboard : UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
             let initialViewController : UIViewController = mainStoryboard.instantiateViewController(withIdentifier: "loadingViewController") as UIViewController
             self.window = UIWindow(frame: UIScreen.main.bounds)
@@ -165,3 +166,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
 
 }
 
+func setupDbRef() {
+    db = Database.database().reference()
+    
+    db!.child(String(Auth.auth().currentUser!.uid)).observeSingleEvent(of: .value, with: { (snapshot) in
+        var dataSnapshot = snapshot.value as? [String: Any]
+        
+        var iterator = 1
+        var templeExists = dataSnapshot?["Temple\(iterator)"] != nil
+        while (templeExists) {
+            
+            iterator += 1
+            templeExists = dataSnapshot?["Temple\(iterator)"] != nil
+        }
+        
+        currentTempledbRef = db!.child(String(Auth.auth().currentUser!.uid)).child("Temple\(iterator)")
+    })
+}

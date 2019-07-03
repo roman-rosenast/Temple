@@ -44,8 +44,7 @@ class StatsViewController: UIViewController, ChartViewDelegate {
         barChart.leftAxis.enabled = false
         barChart.delegate = self
         
-        let db = Database.database().reference().child(String(Auth.auth().currentUser!.uid))
-        db.child("History").observeSingleEvent(of: .value, with: { (snapshot) in
+        currentTempledbRef.child("History").observeSingleEvent(of: .value, with: { (snapshot) in
             let history = snapshot.value as? [String: Any]
             
             var currentDay = history!["CurrentDay"] as! Int
