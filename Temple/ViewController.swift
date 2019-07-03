@@ -378,8 +378,8 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
             pillarData![skill-1].level += 1
             pillarData![skill-1].progress = 0
             
-            currentTempledbRef.child("Configuration/Pillar\(skill)/Level").setValue( pillarData![skill-1].level )
-            currentTempledbRef.child("Configuration/Pillar\(skill)/Progress").setValue( 0.0 )
+            currentTempledbRef!.child("Configuration/Pillar\(skill)/Level").setValue( pillarData![skill-1].level )
+            currentTempledbRef!.child("Configuration/Pillar\(skill)/Progress").setValue( 0.0 )
         
             setupTemple()
         
@@ -391,8 +391,8 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     func downgradeTemple( skill: Int ) {
         if (pillarData![skill-1].level > 1) {
             let secondToMaxVal: Float = 1.0 - 1.0/(Float(pillarData![skill-1].daysToComplete)/Float(MAX_PILLAR_LEVEL))
-            currentTempledbRef.child("Configuration/Pillar\(skill)/Level").setValue( pillarData![skill-1].level - 1 )
-            currentTempledbRef.child("Configuration/Pillar\(skill)/Progress").setValue( secondToMaxVal )
+            currentTempledbRef!.child("Configuration/Pillar\(skill)/Level").setValue( pillarData![skill-1].level - 1 )
+            currentTempledbRef!.child("Configuration/Pillar\(skill)/Progress").setValue( secondToMaxVal )
             
             pillarData![skill-1].level -= 1
             pillarData![skill-1].progress = secondToMaxVal
@@ -451,15 +451,15 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         
         //        Asynchronous backend data updating
         
-        currentTempledbRef.child("History/CurrentDay").observeSingleEvent(of: .value, with: { (snapshot) in
+        currentTempledbRef!.child("History/CurrentDay").observeSingleEvent(of: .value, with: { (snapshot) in
             let currentDay = (snapshot.value as? Int)!
             let currentDayStr = "Day" + String(currentDay)
             
             let skillBool = "P" + String(skillNumber) + "Completed"
-            currentTempledbRef.child("History/\(currentDayStr)/\(skillBool)").setValue("True")
+            currentTempledbRef!.child("History/\(currentDayStr)/\(skillBool)").setValue("True")
             
             let configPillarNum = "Pillar" + String(skillNumber)
-            currentTempledbRef.child("Configuration/\(configPillarNum)/Progress").setValue(incrementedValue)
+            currentTempledbRef!.child("Configuration/\(configPillarNum)/Progress").setValue(incrementedValue)
             
         })
         
@@ -487,16 +487,16 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         
         //        Asynchronous backend data updating
         
-        currentTempledbRef.child("History/CurrentDay").observeSingleEvent(of: .value, with: { (snapshot) in
+        currentTempledbRef!.child("History/CurrentDay").observeSingleEvent(of: .value, with: { (snapshot) in
             let currentDay = (snapshot.value as? Int)!
             let currentDayStr = "Day" + String(currentDay)
             
             let skillBool = "P" + String(skillNumber) + "Completed"
-            currentTempledbRef.child("History/\(currentDayStr)/\(skillBool)").setValue("False")
+            currentTempledbRef!.child("History/\(currentDayStr)/\(skillBool)").setValue("False")
             
             if (decrementedValue >= 0) {
                 let configPillarNum = "Pillar" + String(skillNumber)
-                currentTempledbRef.child("Configuration/\(configPillarNum)/Progress").setValue(decrementedValue)
+                currentTempledbRef!.child("Configuration/\(configPillarNum)/Progress").setValue(decrementedValue)
             }
             
         })
