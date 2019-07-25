@@ -22,8 +22,6 @@ class Setup6VC: SetupStepVC {
     }
     
     @IBAction func startTemple(_ sender: Any) {
-        
-        
         let pvc = self.parent as? SetupViewController
         pvc?.myConfiguration = Array((pvc?.setupPillars.prefix(5))!)
         pvc?.endSetup()

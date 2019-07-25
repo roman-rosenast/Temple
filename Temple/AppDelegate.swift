@@ -16,6 +16,7 @@ import IQKeyboardManagerSwift
 //    GLOBAL APP DATA
 
 let MAX_PILLAR_LEVEL: Int = 4
+let NUMBER_OF_TEMPLES: Int = 2
 
 var db: DatabaseReference?
 var currentTempledbRef: DatabaseReference?
@@ -173,11 +174,11 @@ func setupDbRef() {
         var dataSnapshot = snapshot.value as? [String: Any]
         
         var iterator = 1
-        var templeExists = dataSnapshot?["Temple\(iterator)"] != nil
+        var templeExists = dataSnapshot?["Temple\(iterator + 1)"] != nil
         while (templeExists) {
             
             iterator += 1
-            templeExists = dataSnapshot?["Temple\(iterator)"] != nil
+            templeExists = dataSnapshot?["Temple\(iterator + 1)"] != nil
         }
         
         currentTempledbRef = db!.child(String(Auth.auth().currentUser!.uid)).child("Temple\(iterator)")

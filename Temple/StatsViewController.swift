@@ -17,6 +17,7 @@ class StatsViewController: UIViewController, ChartViewDelegate {
     var pillarData: [Pillar]?
     var dailyChecklist: [Bool]?
     var streaks: [Int]?
+    var templeNumber: Int?
     
     @IBOutlet weak var modalWindow: UIView!
     @IBOutlet weak var barChart: HorizontalBarChartView!
@@ -44,7 +45,7 @@ class StatsViewController: UIViewController, ChartViewDelegate {
         barChart.leftAxis.enabled = false
         barChart.delegate = self
         
-        currentTempledbRef.child("History").observeSingleEvent(of: .value, with: { (snapshot) in
+        currentTempledbRef!.child("History").observeSingleEvent(of: .value, with: { (snapshot) in
             let history = snapshot.value as? [String: Any]
             
             var currentDay = history!["CurrentDay"] as! Int
@@ -81,10 +82,11 @@ class StatsViewController: UIViewController, ChartViewDelegate {
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        let vc = segue.destination as? ViewController
-        vc!.pillarData = pillarData
-        vc!.dailyChecklist = dailyChecklist
-        vc!.streaks = streaks
+        let vc = segue.destination as! ViewController
+        vc.pillarData = pillarData
+        vc.dailyChecklist = dailyChecklist
+        vc.streaks = streaks
+        vc.templeNumber = templeNumber
     }
     
     @IBAction func dismiss(_ sender: Any) {

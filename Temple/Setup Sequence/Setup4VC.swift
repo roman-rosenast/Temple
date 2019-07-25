@@ -104,52 +104,40 @@ class Setup4VC: SetupStepVC, UITableViewDelegate, UITableViewDataSource {
     
     func toggleModal() {
         Modal.isHidden = !Modal.isHidden
+        hideModalButton.isEnabled = !hideModalButton.isEnabled
         tableView.reloadData()
     }
     
     func setupModal() {
         Modal.isHidden = true
+        hideModalButton.isEnabled = false
         Modal.layer.cornerRadius = 10
         
-        color1.backgroundColor = colorOptions[0]
-        color2.backgroundColor = colorOptions[1]
-        color3.backgroundColor = colorOptions[2]
-        color4.backgroundColor = colorOptions[3]
-        color5.backgroundColor = colorOptions[4]
-        color6.backgroundColor = colorOptions[5]
-        color7.backgroundColor = colorOptions[6]
-        color8.backgroundColor = colorOptions[7]
-        color9.backgroundColor = colorOptions[8]
-        color10.backgroundColor = colorOptions[9]
-        color11.backgroundColor = colorOptions[10]
-        color12.backgroundColor = colorOptions[11]
-        
         let colorHeight = color1.layer.bounds.height
-        color1.layer.cornerRadius = colorHeight/2
-        color2.layer.cornerRadius = colorHeight/2
-        color3.layer.cornerRadius = colorHeight/2
-        color4.layer.cornerRadius = colorHeight/2
-        color5.layer.cornerRadius = colorHeight/2
-        color6.layer.cornerRadius = colorHeight/2
-        color7.layer.cornerRadius = colorHeight/2
-        color8.layer.cornerRadius = colorHeight/2
-        color9.layer.cornerRadius = colorHeight/2
-        color10.layer.cornerRadius = colorHeight/2
-        color11.layer.cornerRadius = colorHeight/2
-        color12.layer.cornerRadius = colorHeight/2
         
-        color1.layer.borderWidth = 3
-        color2.layer.borderWidth = 3
-        color3.layer.borderWidth = 3
-        color4.layer.borderWidth = 3
-        color5.layer.borderWidth = 3
-        color6.layer.borderWidth = 3
-        color7.layer.borderWidth = 3
-        color8.layer.borderWidth = 3
-        color9.layer.borderWidth = 3
-        color10.layer.borderWidth = 3
-        color11.layer.borderWidth = 3
-        color12.layer.borderWidth = 3
+        let colorOutlets = [
+            color1,
+            color2,
+            color3,
+            color4,
+            color5,
+            color6,
+            color7,
+            color8,
+            color9,
+            color10,
+            color11,
+            color12
+        ]
+        
+        var iterator = 0
+        for outlet in colorOutlets {
+            outlet!.backgroundColor = colorOptions[iterator]
+            outlet!.layer.cornerRadius = colorHeight/2
+            outlet!.layer.borderWidth = 3
+            
+            iterator += 1
+        }
     }
     
     @IBAction func color1Pressed(_ sender: Any) {
@@ -211,6 +199,14 @@ class Setup4VC: SetupStepVC, UITableViewDelegate, UITableViewDataSource {
         let pvc = self.parent as? SetupViewController
         pvc?.setupPillars[selectedColorIndex!].color = colorOptions[11]
         toggleModal()
+    }
+    
+    
+    @IBOutlet weak var hideModalButton: UIButton!
+    @IBAction func hideModal(_ sender: Any) {
+        if (!Modal.isHidden) {
+            toggleModal()
+        }
     }
     
 //    END MODAL SECTION

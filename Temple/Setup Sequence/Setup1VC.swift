@@ -15,11 +15,22 @@ class Setup1VC: SetupStepVC {
     @IBOutlet weak var swipeImage: UIImageView!
     @IBOutlet weak var logoutButton: UIButton!
     
+    @IBOutlet weak var headerLabel: UILabel!
+    @IBOutlet weak var descriptionLabel: UILabel!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         self.logoutButton.transform = CGAffineTransform(scaleX: -1, y: 1)
         
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        let pvc = self.parent as! SetupViewController
+        if ( !pvc.isFirstTemple ) {
+            headerLabel.text = "Setup Your Next Temple"
+            descriptionLabel.text = "Keep your habits or you can set new ones. You can still see your old Temple in the 'Temples' section and your progress in 'Stats' one."
+        }
     }
     
     override func viewDidAppear(_ animated: Bool) {

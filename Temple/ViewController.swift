@@ -54,6 +54,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     var pillarData: [Pillar]?
     var dailyChecklist: [Bool]?
     var streaks: [Int]?
+    var templeNumber: Int?
     
 //    Description Views
     let blackView = UIView()
@@ -69,22 +70,29 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         mainTabBar.delegate = self
-        checkforUpgrade(self)
-        setupTemple()
-        applyStyles()
         
         self.pillarsTableView.delegate = self
         self.pillarsTableView.dataSource = self
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        print("Temple number when VC loads: \(templeNumber)")
+        applyStyles()
+        checkForTempleCompletion()
+        checkforUpgrade(self)
+        setupTemple()
         
         let calendar = Calendar.current
         let now = Date()
         let date = calendar.date(
-            bySettingHour: 23,
-            minute: 59,
-            second: 59,
+            bySettingHour: 00,
+            minute: 00,
+            second: 01,
             of: now)!
-        let timer = Timer(fireAt: date, interval: 0, target: self, selector: #selector(midnightReload), userInfo: nil, repeats: false)
+        let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: date)
+        let timer = Timer(fireAt: tomorrow!, interval: 0, target: self, selector: #selector(midnightReload), userInfo: nil, repeats: false)
         RunLoop.main.add(timer, forMode: RunLoop.Mode.common)
         
         //Long Press
@@ -92,7 +100,12 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         longPressGesture.minimumPressDuration = 0.5
         longPressGesture.delegate = self
         self.pillarsTableView.addGestureRecognizer(longPressGesture)
-                
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        pillarsTableView.reloadData()
+        snakeHints()
     }
     
     @objc func midnightReload() {
@@ -100,12 +113,6 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let secondVC = storyboard.instantiateViewController(withIdentifier: "loadingViewController") as! LoadingViewController
         present(secondVC, animated: false, completion: nil)
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        pillarsTableView.reloadData()
-        snakeHints()
     }
     
     func dynamicRowHeight() -> CGFloat {
@@ -230,6 +237,8 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         
         if (streaks![indexPath.section] > 0) {
             cell.PillarCellStreak.text = String(streaks![indexPath.section])
+        } else {
+            cell.PillarCellStreak.text = ""
         }
 
         return cell
@@ -384,8 +393,11 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
             setupTemple()
         
         } else {
-            print("\(pillarData![skill-1].title) is already at the maximum level. Well done!")
+            print("\(pillarData![skill-1].title) is at the maximum level. Well done!")
         }
+        
+        checkForTempleCompletion()
+        
     }
     
     func downgradeTemple( skill: Int ) {
@@ -399,12 +411,12 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
             setupTemple()
             
         } else {
-            print("\(pillarData![skill-1].title) is already at the minimum level. This should never get called.")
+            print("\(pillarData![skill-1].title) is at the minimum level. This should never get called.")
         }
         pillarsTableView.reloadData()
     }
     
-    func readyToUpgrade(myColor: UIColor, skillTitle: String) {
+    func readyToUpgradeAnimation() {
         
 //        if readyToUpgrade {
 //            TempleTapHandler.setTitle("Upgrade", for: .normal)
@@ -444,7 +456,8 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         cell.PillarCellProgress.layoutIfNeeded()
         
         if (incrementedValue >= 1 ) {
-            self.readyToUpgrade(myColor: self.pillarData![skillNumber - 1].color, skillTitle: self.pillarData![skillNumber - 1].templeComp)
+//            self.readyToUpgrade(myColor: self.pillarData![skillNumber - 1].color, skillTitle: self.pillarData![skillNumber - 1].templeComp)
+            readyToUpgradeAnimation()
         }
         
         streaks![skillNumber - 1] += 1
@@ -456,14 +469,17 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
             let currentDayStr = "Day" + String(currentDay)
             
             let skillBool = "P" + String(skillNumber) + "Completed"
-            currentTempledbRef!.child("History/\(currentDayStr)/\(skillBool)").setValue("True")
+        currentTempledbRef!.child("History/\(currentDayStr)/\(skillBool)").setValue("True")
             
             let configPillarNum = "Pillar" + String(skillNumber)
             currentTempledbRef!.child("Configuration/\(configPillarNum)/Progress").setValue(incrementedValue)
             
         })
         
+        //         Additional Steps
+        
         checkForDailyCompletion()
+        checkForComponentCompletion(skill: skillNumber)
         
         pillarsTableView.reloadData()
 
@@ -516,6 +532,50 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         pillarsTableView.reloadData()
     }
     
+    func checkForComponentCompletion(skill: Int) {
+        if (pillarData![skill-1].level == MAX_PILLAR_LEVEL && pillarData![skill-1].progress >= 1) {
+            self.deanimateTemple()
+            
+            if !isTempleComplete() {
+                
+                let alert = UIAlertController(title: "\(pillarData![skill-1].title) is at the maximum level.", message: "The \(pillarData![skill-1].templeComp) of your temple cannot be upgraded further. Fully upgrade all of your other Temple Components to move on to the next Temple!", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "Close", style: .default, handler: nil))
+                self.present(alert, animated: true)
+            }
+            
+//            If user is ready for temple upgrade show them the animation
+            else {
+                self.readyToUpgradeAnimation()
+            }
+        }
+    }
+    
+    func isTempleComplete() -> Bool {
+        var templeIsComplete = true
+        for pillar in pillarData! {
+            //            UPGRDE IF ALL PILLARS ARE AT MAX LEVEL AND PROGRESS BAR IS FULL
+            if (pillar.level < MAX_PILLAR_LEVEL || pillar.progress < 1) {
+                templeIsComplete = false
+                break
+            }
+        }
+        return templeIsComplete
+    }
+    
+    func checkForTempleCompletion() {
+        
+        if isTempleComplete() {
+            // Reset one pillar's progress so that this does not hit immediately after setting up
+//            self.pillarData![0].progress = 0
+            
+            // Start New Temple
+            let vc = self.storyboard!.instantiateViewController(withIdentifier: "loadingViewController") as! LoadingViewController
+            vc.needsToSetupNewTemple = true
+            vc.previousPillars = self.pillarData!
+            self.present(vc, animated: false, completion: nil)
+        }
+    }
+    
     func snakeHints() {
         var delay = 0.0
         for index in 0...4 {
@@ -531,7 +591,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     
     func checkForDailyCompletion() {
         if dayIsComplete() {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5, execute: {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: {
                 let alert = UIAlertController(title: "Well Done", message: "You completed every habit today! Relax and enjoy the rest of your day.", preferredStyle: .alert)
                 
                 alert.addAction(UIAlertAction(title: "Close", style: .default, handler: nil))
@@ -557,6 +617,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
             vc!.pillarData = pillarData
             vc!.dailyChecklist = dailyChecklist
             vc!.streaks = streaks
+            vc!.templeNumber = templeNumber
         }
         
         else if (segue.destination.restorationIdentifier == "statsViewID") {
@@ -564,15 +625,16 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
             vc!.pillarData = pillarData
             vc!.dailyChecklist = dailyChecklist
             vc!.streaks = streaks
+            vc!.templeNumber = templeNumber
         }
         
-        else  { // transitioning to settings vc
+        else if (segue.destination.restorationIdentifier == "settingsViewID") { // transitioning to settings vc
             let vc = segue.destination as? SettingsViewController
             vc!.pillarData = pillarData
             vc!.dailyChecklist = dailyChecklist
             vc!.streaks = streaks
+            vc!.templeNumber = templeNumber
         }
-        
         
     }
     
@@ -599,42 +661,46 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         
     }
     
+    func getSprite( temple: Int, level: Int, templeComp: String) -> UIImage {
+        return UIImage(named: "Temple\(temple)-Level\(level)-\(templeComp)")!
+    }
+    
     func setupTemple() {
         
         UIView.transition(with: self.pillar1ImageView,
                           duration: 0.5,
                           options: .transitionCrossDissolve,
-                          animations: { self.pillar1ImageView.image = UIImage(named: "Temple-Level\(self.pillarData![0].level)-\(self.pillarData![0].templeComp)") },
+                          animations: { self.pillar1ImageView.image = self.getSprite(temple: self.templeNumber!, level: self.pillarData![0].level, templeComp: self.pillarData![0].templeComp) },
                           completion: nil)
         
         UIView.transition(with: self.pillar2ImageView,
                           duration: 0.5,
                           options: .transitionCrossDissolve,
-                          animations: { self.pillar2ImageView.image = UIImage(named: "Temple-Level\(self.pillarData![1].level)-\(self.pillarData![1].templeComp)") },
+                          animations: { self.pillar2ImageView.image = self.getSprite(temple: self.templeNumber!, level: self.pillarData![1].level, templeComp: self.pillarData![1].templeComp) },
                           completion: nil)
         
         UIView.transition(with: self.pillar3ImageView,
                           duration: 0.5,
                           options: .transitionCrossDissolve,
-                          animations: { self.pillar3ImageView.image = UIImage(named: "Temple-Level\(self.pillarData![2].level)-\(self.pillarData![2].templeComp)") },
+                          animations: { self.pillar3ImageView.image = self.getSprite(temple: self.templeNumber!, level: self.pillarData![2].level, templeComp: self.pillarData![2].templeComp) },
                           completion: nil)
         
         UIView.transition(with: self.pillar4ImageView,
                           duration: 0.5,
                           options: .transitionCrossDissolve,
-                          animations: { self.pillar4ImageView.image = UIImage(named: "Temple-Level\(self.pillarData![3].level)-\(self.pillarData![3].templeComp)") },
+                          animations: { self.pillar4ImageView.image = self.getSprite(temple: self.templeNumber!, level: self.pillarData![3].level, templeComp: self.pillarData![3].templeComp) },
                           completion: nil)
         
         UIView.transition(with: self.pillar5ImageView,
                           duration: 0.5,
                           options: .transitionCrossDissolve,
-                          animations: { self.pillar5ImageView.image = UIImage(named: "Temple-Level\(self.pillarData![4].level)-\(self.pillarData![4].templeComp)") },
+                          animations: { self.pillar5ImageView.image = self.getSprite(temple: self.templeNumber!, level: self.pillarData![4].level, templeComp: self.pillarData![4].templeComp) },
                           completion: nil)
     }
     
     @IBAction func checkforUpgrade(_ sender: Any) {
         for index in 1...5 {
-            if ( pillarData![index-1].progress >= 1.0) {
+            if ( pillarData![index-1].progress >= 1.0 ) {
                 upgradeTemple(skill: index)
                 setupTemple()
             }

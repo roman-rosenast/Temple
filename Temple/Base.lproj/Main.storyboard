@@ -47,20 +47,21 @@
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="You have not completed any temples yet. Check back after completing one to see your collection." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="8" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="w3L-6U-yuS">
-                                            <rect key="frame" x="50" y="127" width="200" height="272"/>
-                                            <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="20"/>
-                                            <nil key="textColor"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3Vi-E5-iR5">
+                                            <rect key="frame" x="82" y="127" width="150" height="519"/>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="150" id="nNs-Bk-5th"/>
+                                            </constraints>
+                                        </view>
                                     </subviews>
                                     <color key="backgroundColor" white="0.94755993149999995" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <constraints>
                                         <constraint firstItem="PyD-ys-ncI" firstAttribute="top" secondItem="vQU-Pa-8vh" secondAttribute="top" constant="50" id="0rz-0y-vVs"/>
-                                        <constraint firstItem="w3L-6U-yuS" firstAttribute="leading" secondItem="vQU-Pa-8vh" secondAttribute="leading" constant="50" id="T2H-VZ-esX"/>
+                                        <constraint firstItem="3Vi-E5-iR5" firstAttribute="top" secondItem="PyD-ys-ncI" secondAttribute="bottom" constant="50" id="AnI-2u-Gle"/>
+                                        <constraint firstAttribute="bottom" secondItem="3Vi-E5-iR5" secondAttribute="bottom" constant="50" id="LwZ-k7-EdV"/>
                                         <constraint firstItem="PyD-ys-ncI" firstAttribute="centerX" secondItem="vQU-Pa-8vh" secondAttribute="centerX" id="bpE-RV-1ol"/>
-                                        <constraint firstAttribute="trailing" secondItem="w3L-6U-yuS" secondAttribute="trailing" constant="50" id="fET-5x-9AD"/>
-                                        <constraint firstItem="w3L-6U-yuS" firstAttribute="top" secondItem="PyD-ys-ncI" secondAttribute="bottom" constant="50" id="ohU-p9-2rG"/>
+                                        <constraint firstItem="3Vi-E5-iR5" firstAttribute="centerX" secondItem="vQU-Pa-8vh" secondAttribute="centerX" id="ymQ-TH-89M"/>
                                     </constraints>
                                 </view>
                             </subviews>
@@ -79,6 +80,7 @@
                     </visualEffectView>
                     <connections>
                         <outlet property="modalWindow" destination="vQU-Pa-8vh" id="E9d-p9-DCq"/>
+                        <outlet property="scrollContainer" destination="3Vi-E5-iR5" id="n0k-f4-NwE"/>
                         <segue destination="BYZ-38-t0r" kind="presentation" identifier="hideBuildModal" modalPresentationStyle="fullScreen" modalTransitionStyle="crossDissolve" id="Zbr-av-xmG"/>
                     </connections>
                 </viewController>
@@ -164,7 +166,7 @@
         <!--Settings View Controller-->
         <scene sceneID="AKn-mt-TLY">
             <objects>
-                <viewController id="hCr-wK-6uG" customClass="SettingsViewController" customModule="Temple" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="settingsViewID" useStoryboardIdentifierAsRestorationIdentifier="YES" id="hCr-wK-6uG" customClass="SettingsViewController" customModule="Temple" customModuleProvider="target" sceneMemberID="viewController">
                     <visualEffectView key="view" opaque="NO" contentMode="scaleToFill" id="jDj-uA-la1">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -381,6 +383,8 @@
                         <viewLayoutGuide key="safeArea" id="oqp-e4-eFt"/>
                     </view>
                     <connections>
+                        <outlet property="descriptionLabel" destination="ut7-EB-8eC" id="tIp-xG-hqE"/>
+                        <outlet property="headerLabel" destination="WRZ-lc-ND2" id="JFG-fV-wfg"/>
                         <outlet property="logoutButton" destination="Hfp-hc-pKw" id="zqb-oa-dbH"/>
                         <outlet property="swipeImage" destination="b1Y-7m-qOc" id="0e8-x7-LT1"/>
                     </connections>
@@ -663,6 +667,12 @@
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Qag-9C-jyv">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                                <connections>
+                                    <action selector="hideModal:" destination="vwa-oh-yzD" eventType="touchUpInside" id="rgU-p8-2ty"/>
+                                </connections>
+                            </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="av2-q9-BD7" userLabel="Modal">
                                 <rect key="frame" x="50" y="94" width="314" height="718"/>
                                 <subviews>
@@ -847,8 +857,12 @@
                             <constraint firstItem="zt3-xP-Ijs" firstAttribute="trailing" secondItem="av2-q9-BD7" secondAttribute="trailing" constant="50" id="BwC-tZ-il9"/>
                             <constraint firstItem="zt3-xP-Ijs" firstAttribute="bottom" secondItem="av2-q9-BD7" secondAttribute="bottom" constant="50" id="C9w-TN-CIP"/>
                             <constraint firstItem="av2-q9-BD7" firstAttribute="top" secondItem="zt3-xP-Ijs" secondAttribute="top" constant="50" id="CbE-iB-YqG"/>
+                            <constraint firstItem="Qag-9C-jyv" firstAttribute="top" secondItem="p8s-c1-FTf" secondAttribute="top" id="Dcx-Pf-K8Y"/>
                             <constraint firstItem="zt3-xP-Ijs" firstAttribute="trailing" secondItem="gsi-7L-1hD" secondAttribute="trailing" constant="50" id="DjI-ET-JoV"/>
+                            <constraint firstItem="Qag-9C-jyv" firstAttribute="trailing" secondItem="zt3-xP-Ijs" secondAttribute="trailing" id="EXz-vH-Xfc"/>
+                            <constraint firstItem="Qag-9C-jyv" firstAttribute="leading" secondItem="zt3-xP-Ijs" secondAttribute="leading" id="OvI-uq-YpW"/>
                             <constraint firstItem="W90-g5-2ui" firstAttribute="top" secondItem="zt3-xP-Ijs" secondAttribute="top" constant="50" id="T6e-aW-BGp"/>
+                            <constraint firstAttribute="bottom" secondItem="Qag-9C-jyv" secondAttribute="bottom" id="ccV-Oq-z2O"/>
                             <constraint firstItem="gsi-7L-1hD" firstAttribute="top" secondItem="W90-g5-2ui" secondAttribute="bottom" constant="50" id="gQL-ia-7rI"/>
                             <constraint firstItem="av2-q9-BD7" firstAttribute="leading" secondItem="zt3-xP-Ijs" secondAttribute="leading" constant="50" id="jdu-hp-yt5"/>
                             <constraint firstItem="gsi-7L-1hD" firstAttribute="leading" secondItem="zt3-xP-Ijs" secondAttribute="leading" constant="50" id="r1R-P7-pTp"/>
@@ -870,12 +884,13 @@
                         <outlet property="color7" destination="mYL-2g-c2c" id="78D-Fr-oZ8"/>
                         <outlet property="color8" destination="w3n-Ye-fgv" id="c9Q-9a-UJW"/>
                         <outlet property="color9" destination="RgV-Kj-JJS" id="gFk-p5-CUL"/>
+                        <outlet property="hideModalButton" destination="Qag-9C-jyv" id="iBM-oQ-D6x"/>
                         <outlet property="tableView" destination="gsi-7L-1hD" id="Gns-cq-GJW"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ah4-y6-w2L" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3303" y="-644"/>
+            <point key="canvasLocation" x="3302.898550724638" y="-644.19642857142856"/>
         </scene>
         <!--Loading View Controller-->
         <scene sceneID="SmG-ST-Bfz">
@@ -886,7 +901,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Loading your Temple..." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Yur-ky-D2a">
-                                <rect key="frame" x="132" y="428" width="150" height="75"/>
+                                <rect key="frame" x="132" y="424" width="150" height="75"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="150" id="PFV-Uh-GiC"/>
                                     <constraint firstAttribute="height" constant="75" id="tzY-fh-QJS"/>
@@ -896,9 +911,10 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Temple-Background-Only" translatesAutoresizingMaskIntoConstraints="NO" id="HvQ-JN-vdP">
-                                <rect key="frame" x="50" y="84" width="314" height="314"/>
+                                <rect key="frame" x="57" y="94" width="300" height="300"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="HvQ-JN-vdP" secondAttribute="height" multiplier="1:1" id="Bbh-J1-xvc"/>
+                                    <constraint firstAttribute="width" constant="300" id="NbZ-k4-Yu8"/>
                                 </constraints>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="string" keyPath="layer.cornerRadius" value="8"/>
@@ -908,15 +924,15 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="Yur-ky-D2a" firstAttribute="centerX" secondItem="DRY-bs-nh5" secondAttribute="centerX" id="EKL-N1-QVS"/>
-                            <constraint firstItem="HvQ-JN-vdP" firstAttribute="top" secondItem="kGE-1W-Ioa" secondAttribute="top" constant="40" id="TYo-NT-keb"/>
-                            <constraint firstAttribute="trailing" secondItem="HvQ-JN-vdP" secondAttribute="trailing" constant="50" id="dzo-Me-gui"/>
-                            <constraint firstItem="HvQ-JN-vdP" firstAttribute="leading" secondItem="DRY-bs-nh5" secondAttribute="leading" constant="50" id="iYC-4a-pWq"/>
+                            <constraint firstItem="HvQ-JN-vdP" firstAttribute="top" secondItem="kGE-1W-Ioa" secondAttribute="top" constant="50" id="TYo-NT-keb"/>
                             <constraint firstItem="Yur-ky-D2a" firstAttribute="top" secondItem="HvQ-JN-vdP" secondAttribute="bottom" constant="30" id="nLi-7N-sCF"/>
                             <constraint firstItem="HvQ-JN-vdP" firstAttribute="centerX" secondItem="DRY-bs-nh5" secondAttribute="centerX" id="yKD-lh-eEu"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="kGE-1W-Ioa"/>
                     </view>
                     <connections>
+                        <outlet property="BGtopMargin" destination="TYo-NT-keb" id="VIM-Tb-ins"/>
+                        <outlet property="BGwidth" destination="NbZ-k4-Yu8" id="vqJ-WW-JCz"/>
                         <segue destination="BYZ-38-t0r" kind="presentation" identifier="doneLoading" modalPresentationStyle="fullScreen" modalTransitionStyle="crossDissolve" id="CA2-7w-16R"/>
                         <segue destination="WKs-4G-YdF" kind="presentation" identifier="needToLoginSegue" id="L8h-65-8Po"/>
                         <segue destination="cHN-gQ-xVw" kind="presentation" identifier="beginSetupSegue" id="kYY-x6-IJ6"/>
@@ -1186,6 +1202,8 @@
                                     <constraint firstAttribute="width" constant="100" id="0TT-Oc-BhI"/>
                                     <constraint firstAttribute="height" constant="37" id="EF3-1r-vca"/>
                                 </constraints>
+                                <color key="pageIndicatorTintColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="currentPageIndicatorTintColor" cocoaTouchSystemColor="viewFlipsideBackgroundColor"/>
                             </pageControl>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -1400,6 +1418,6 @@
         <image name="Temples-Icon-Small" width="25" height="25"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="Llr-SD-cyx"/>
+        <segue reference="Zbr-av-xmG"/>
     </inferredMetricsTieBreakers>
 </document>

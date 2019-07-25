@@ -20,6 +20,7 @@ class SettingsViewController: UIViewController, UIGestureRecognizerDelegate {
     var pillarData: [Pillar]?
     var dailyChecklist: [Bool]?
     var streaks: [Int]?
+    var templeNumber: Int?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -55,10 +56,11 @@ class SettingsViewController: UIViewController, UIGestureRecognizerDelegate {
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        let vc = segue.destination as? ViewController
-        vc!.pillarData = pillarData
-        vc!.dailyChecklist = dailyChecklist
-        vc!.streaks = streaks
+        let vc = segue.destination as! ViewController
+        vc.pillarData = pillarData
+        vc.dailyChecklist = dailyChecklist
+        vc.streaks = streaks
+        vc.templeNumber = templeNumber
     }
     
     @IBAction func dismiss(_ sender: Any) {
@@ -84,10 +86,12 @@ class SettingsViewController: UIViewController, UIGestureRecognizerDelegate {
     }
     
     func resetTemple() {
-        currentTempledbRef.setValue(nil)
+        currentTempledbRef!.setValue(nil)
         
         if let storyboard = self.storyboard {
             let vc = storyboard.instantiateViewController(withIdentifier: "loadingViewController") as! LoadingViewController
+            vc.needsToSetupNewTemple = true
+            vc.previousPillars = self.pillarData!
             self.present(vc, animated: false, completion: nil)
         }
     }

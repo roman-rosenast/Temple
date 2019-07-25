@@ -16,49 +16,91 @@ class LoadingViewController: UIViewController {
     var dailyChecklist = Array(repeating: false, count: 5)
     var pillarData = [Pillar]()
     var streaks = [Int]()
+    var templeNumber = Int()
+    
+    var needsToSetupNewTemple = false
+    var justSetupTemple = false
+    var previousPillars = [Pillar]()
     
     var ViewController: UIViewController?
+    
+    @IBOutlet weak var BGtopMargin: NSLayoutConstraint!
+    @IBOutlet weak var BGwidth: NSLayoutConstraint!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        setupDbRef()
+        applyStyles()
+    }
+    
+//    override func viewWillAppear(_ animated: Bool) {
+//
+//        Auth.auth().addStateDidChangeListener { auth, user in
+//            if user != nil {
+//                self.loginDone()
+//            } else {
+//                self.performSegue(withIdentifier: "needToLoginSegue", sender: self)
+//            }
+//        }
+//    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
         
         Auth.auth().addStateDidChangeListener { auth, user in
             if user != nil {
+                print("\(user!.email!) logged in.")
                 self.loginDone()
             } else {
-                print("we are in loadingVC and user is not logged in")
                 self.performSegue(withIdentifier: "needToLoginSegue", sender: self)
             }
+        }
+        
+        if needsToSetupNewTemple {
+            print("needToSetupTemple is hitting on viewdidappear in loading")
+            beginSetupSequence()
         }
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if (segue.destination.restorationIdentifier == "viewController") {
             let vc = segue.destination as! ViewController
+            print("Temple number when preparing for seque: \(templeNumber)")
             vc.dailyChecklist = dailyChecklist
             vc.pillarData = pillarData
             vc.streaks = streaks
+            vc.templeNumber = templeNumber
+        }
+        
+        else if (segue.identifier == "beginSetupSegue") {
+            let vc = segue.destination as! SetupViewController
+            vc.isFirstTemple = !self.needsToSetupNewTemple
+            vc.previousPillars = self.previousPillars
         }
     }
     
     func loginDone() {
+        
+        setupDbRef()
+        
         db!.observeSingleEvent(of: .value, with: { (snapshot) in
             
             var dataSnapshot = snapshot.value as? [String: Any]
         
             let keyExists = dataSnapshot?[String(Auth.auth().currentUser?.uid ?? "nil")] != nil
             
-            if (keyExists) {
+            if (self.justSetupTemple) {
+                //                self.fetchData(completion: { myTuple in
+                //                    self.performSegue(withIdentifier: "doneLoading", sender: self)
+                //                })
+            }
+            else if (keyExists) { // We know the user has at least 1 temple
                 self.fetchData(completion: { myTuple in
                     self.performSegue(withIdentifier: "doneLoading", sender: self)
                 })
-            } else {
-//                try! Auth.auth().signOut()
-//                GIDSignIn.sharedInstance().signOut()
+            }
+            else {
                 self.beginSetupSequence()
-//                self.addUserToDatabase()
             }
         })
     }
@@ -67,8 +109,10 @@ class LoadingViewController: UIViewController {
         self.performSegue(withIdentifier: "beginSetupSegue", sender: self)
     }
     
-    func addUserToDatabase(newConfig: [Pillar]) {
-        print("addUser Called")
+    func addTempleToDatabase(newConfig: [Pillar]) {
+        print("addTempleToDatabase Called")
+        setupDbRef()
+        
         // Step 1: Add user's id to top level of DB. Then add History and config starter dicts
         let myDate = Date.getDateStr(dateObj: self.dateFor(timeStamp: Date.getDateStr(dateObj: Date())) as Date)
         
@@ -82,7 +126,7 @@ class LoadingViewController: UIViewController {
             }
         }
         
-        let starterDict = [
+        let newTempleDict = [
             "History": [
                 "CurrentDay": 1,
                 "Day1": [
@@ -167,14 +211,43 @@ class LoadingViewController: UIViewController {
                 ],
             ]
         ]
-        currentTempledbRef!.setValue(starterDict)
+        
+        db!.child(String(Auth.auth().currentUser!.uid)).observeSingleEvent(of: .value, with: { (snapshot) in
+            var dataSnapshot = snapshot.value as? [String: Any]
+
+            var iterator = 1
+            var templeExists = dataSnapshot?["Temple\(iterator)"] != nil
+            while (templeExists) {
+                iterator += 1
+                templeExists = dataSnapshot?["Temple\(iterator)"] != nil
+            }
+
+            let newTempleString = "Temple\(iterator)"
+            db!.child(String(Auth.auth().currentUser!.uid)).child(newTempleString).setValue(newTempleDict) { (error, ref) -> Void in
+                self.fetchData(completion: { myTuple in
+                    
+                    var vc: ViewController
+                    vc = self.storyboard?.instantiateViewController(withIdentifier: "viewController") as! ViewController
+                    vc.dailyChecklist = self.dailyChecklist
+                    vc.pillarData = self.pillarData
+                    vc.streaks = self.streaks
+                    vc.templeNumber = self.templeNumber
+                    self.present(vc, animated: true, completion: nil)
+                    
+//                    self.performSegue(withIdentifier: "doneLoading", sender: self)
+                })
+            }
+
+        })
+        
     }
     
-    func fetchData(completion: @escaping ( ([Pillar], [Bool], [Int])) -> Void) {
+    func fetchData(completion: @escaping ( ([Pillar], [Bool], [Int], Int)) -> Void) {
+        setupDbRef()
         currentTempledbRef!.observeSingleEvent(of: .value, with: { (snapshot) in
             
             var dataSnapshot = snapshot.value as? [String: Any]
-            
+
             let history = dataSnapshot!["History"] as? [String: Any]
             
             let currentDay = history!["CurrentDay"] as! Int
@@ -297,40 +370,39 @@ class LoadingViewController: UIViewController {
             //                 Done Updating Configuration
             //                 Populate Streaks Array
             
-            if (history!["CurrentDay"] as! Int == 1) { // No Streaks if its the first day
-                self.streaks = [0, 0, 0, 0, 0]
-            } else {
-                for index in 1...5 {
-                    
-                    let skillBool = "P" + String(index) + "Completed"
-                    
-                    var myDay = history!["CurrentDay"] as! Int - 1
-                    var myDayStr = "Day" + String(myDay)
-                    var myDayDict = history![myDayStr] as? [String: Any]
-                    var skillStatus = myDayDict![skillBool] as? String ?? ""
+            for index in 1...5 {
+                
+                let skillBool = "P" + String(index) + "Completed"
+                
+                var myDay = history!["CurrentDay"] as! Int - 1
+                
+                if (myDay == 0) { myDay = 1}
+                
+                var myDayStr = "Day" + String(myDay)
+                var myDayDict = history![myDayStr] as! [String: Any]
+                var skillStatus = myDayDict[skillBool] as! String
 
-                    var currentStreak = 0
-                    while (skillStatus == "True" && myDay > 0) {
-                        
-                        myDay -= 1
-                        myDayStr = "Day" + String(myDay)
-                        myDayDict = history![myDayStr] as? [String: Any]
-                        skillStatus = myDayDict![skillBool] as? String ?? ""
-                        
-                        currentStreak += 1
-                    }
-                    
-                    if (self.dailyChecklist[index-1]) { currentStreak += 1} // Handle user having completed habit that day
-                    
-                    self.streaks.append(currentStreak)
-                    
+                var currentStreak = 0
+                while (skillStatus == "True" && myDay > 1 ) {
+                    myDay -= 1
+                    currentStreak += 1
+
+                    myDayStr = "Day" + String(myDay)
+                    myDayDict = history![myDayStr] as! [String: Any]
+                    skillStatus = myDayDict[skillBool] as! String
                 }
+                
+                if ((history!["Day" + String(history!["CurrentDay"] as! Int)] as! [String: Any])[skillBool] as! String == "True") { currentStreak += 1}
+                
+                self.streaks.append(currentStreak)
+                
             }
             
             //                  Done Populating Streaks Array
-        
-            completion((self.pillarData, self.dailyChecklist, self.streaks))
             
+            self.templeNumber = Int(snapshot.key.filter { "0"..."9" ~= $0 })!
+            
+            completion((self.pillarData, self.dailyChecklist, self.streaks, self.templeNumber))
             
         })
     }
@@ -340,6 +412,15 @@ class LoadingViewController: UIViewController {
         let formater = DateFormatter()
         formater.dateFormat = "MM/dd/yy"
         return formater.date(from: timeStamp)! as NSDate
+    }
+    
+    func applyStyles() {
+        //      Handle responsive top margin
+        let screenHeight = UIScreen.main.bounds.height
+        BGtopMargin.constant = screenHeight/20
+        
+        //      Handle responsive temple image
+        BGwidth.constant = screenHeight/3
     }
     
 }

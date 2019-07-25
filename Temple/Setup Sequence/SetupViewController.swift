@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import FirebaseAuth
 
 class SetupViewController: UIViewController, UIScrollViewDelegate {
     
@@ -16,6 +17,9 @@ class SetupViewController: UIViewController, UIScrollViewDelegate {
     var pages = [SetupStepVC]()
     
     var myConfiguration = [Pillar]()
+    
+    var isFirstTemple = true
+    var previousPillars = [Pillar]()
     
     var setupPillars = [
         Pillar(title: "Meditation", image: UIImage(named: "Meditation_Icon")!, progress: 0, level: 1, templeComp: "", color: UIColor(red:0.98, green:0.41, blue:0.00, alpha:1.0), daysToComplete: 12, description: "Meditate for 10 minutes"),
@@ -36,6 +40,8 @@ class SetupViewController: UIViewController, UIScrollViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.setupScrollView.delegate = self
+        
+        if !isFirstTemple { configureAdditionalTemple() }
 
         let page1: SetupStepVC = addSetupStep(setupNumber: 1) as! Setup1VC
         let page2: SetupStepVC = addSetupStep(setupNumber: 2) as! Setup2VC
@@ -105,21 +111,72 @@ class SetupViewController: UIViewController, UIScrollViewDelegate {
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
-        // Quick finalization of PillarData
+        // Finalization of PillarData
         var templeComponents = [
-            "Walls",
-            "Archway",
-            "Foundation",
-            "Roof",
-            "Door"
+            [
+                "Walls",
+                "Archway",
+                "Foundation",
+                "Roof",
+                "Door"
+            ],
+            [
+                "Walls",
+                "Roof",
+                "Door",
+                "Pillars",
+                "Lights"
+            ]
         ]
         
-        for index in 0...4 {
-            myConfiguration[index].templeComp = templeComponents[index]
+        db!.child(String(Auth.auth().currentUser!.uid)).observeSingleEvent(of: .value, with: { (snapshot) in
+            var dataSnapshot = snapshot.value as? [String: Any]
+            
+            var iterator = 0
+            if (dataSnapshot != nil) {
+                iterator = 1
+                var templeExists = dataSnapshot?["Temple\(iterator + 1)"] != nil
+                while (templeExists) {
+                    iterator += 1
+                    templeExists = dataSnapshot?["Temple\(iterator + 1)"] != nil
+                }
+            }
+            
+            let templeNumber = iterator + 1
+            for index in 0...4 {
+                self.myConfiguration[index].templeComp = templeComponents[templeNumber - 1][index]
+            }
+            
+            let vc = segue.destination as! LoadingViewController
+            vc.justSetupTemple = true
+            vc.addTempleToDatabase(newConfig: self.myConfiguration)
+        })
+        
+    }
+    
+    func configureAdditionalTemple() {
+        var indicesToDelete = [Int]()
+        
+        var iterator = 0
+        for setupPillar in setupPillars {
+            for previousPillar in previousPillars {
+                if (setupPillar.title == previousPillar.title) {
+                    indicesToDelete.append(iterator)
+                    break
+                }
+            }
+            
+            iterator += 1
+        }
+        for index in indicesToDelete.reversed() {
+            setupPillars.remove(at: index)
         }
         
-        let vc = segue.destination as! LoadingViewController
-        vc.addUserToDatabase(newConfig: myConfiguration)
+        for pillar in setupPillars {
+            previousPillars.append(pillar)
+        }
+        setupPillars = previousPillars
+        
     }
 
 }
