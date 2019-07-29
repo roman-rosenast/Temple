@@ -78,10 +78,10 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        print("Temple number when VC loads: \(templeNumber)")
         applyStyles()
-        checkForTempleCompletion()
-        checkforUpgrade(self)
+//        checkForTempleCompletion()
+//        checkforUpgrade(self)
+        suggestUpgradeOnLoad()
         setupTemple()
         
         let calendar = Calendar.current
@@ -268,11 +268,6 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         completeAction.backgroundColor = UIColor.getComplementColor(color: pillarData![indexPath.section].color)
         return UISwipeActionsConfiguration(actions: [completeAction])
     }
-    
-//    func tableView(_ tableView: UITableView, didEndEditingRowAt indexPath: IndexPath?)
-//    {
-//        tableView.reloadRows(at: [indexPath!], with: UITableView.RowAnimation.fade)
-//    }
     
     func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle
     {
@@ -550,6 +545,23 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         }
     }
     
+    func suggestUpgradeOnLoad() {
+        var completeComponents = 0
+        for pillar in pillarData! {
+            if (pillar.level < MAX_PILLAR_LEVEL && pillar.progress >= 1) { // we are not ready for a new temple but a component can upgrade
+                readyToUpgradeAnimation()
+                break
+            }
+            else if (pillar.level == MAX_PILLAR_LEVEL && pillar.progress >= 1) { // component is complete
+                completeComponents += 1
+            }
+        }
+        
+        if (completeComponents == 5) { // all components are complete
+            readyToUpgradeAnimation()
+        }
+    }
+    
     func isTempleComplete() -> Bool {
         var templeIsComplete = true
         for pillar in pillarData! {
@@ -565,14 +577,20 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     func checkForTempleCompletion() {
         
         if isTempleComplete() {
-            // Reset one pillar's progress so that this does not hit immediately after setting up
-//            self.pillarData![0].progress = 0
+            if templeNumber == NUMBER_OF_TEMPLES {
+                let alert = UIAlertController(title: "You Completed Every Temple!", message: "Honestly, I did not expect anybody to get to this point. Thank you for using Temple and congratulations on your dedication. I am working on adding more Temples and will have them released soon.\n\nSincerely, Roman (the developer)", preferredStyle: .alert)
+                
+                alert.addAction(UIAlertAction(title: "Close", style: .default, handler: nil))
+                
+                self.present(alert, animated: true)
+            } else {
             
-            // Start New Temple
-            let vc = self.storyboard!.instantiateViewController(withIdentifier: "loadingViewController") as! LoadingViewController
-            vc.needsToSetupNewTemple = true
-            vc.previousPillars = self.pillarData!
-            self.present(vc, animated: false, completion: nil)
+                // Start New Temple
+                let vc = self.storyboard!.instantiateViewController(withIdentifier: "loadingViewController") as! LoadingViewController
+                vc.needsToSetupNewTemple = true
+                vc.previousPillars = self.pillarData!
+                self.present(vc, animated: false, completion: nil)
+            }
         }
     }
     

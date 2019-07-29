@@ -13,11 +13,17 @@ import Firebase
 import FirebaseAuth
 
 class StatsViewController: UIViewController, ChartViewDelegate {
-
+    
     var pillarData: [Pillar]?
     var dailyChecklist: [Bool]?
     var streaks: [Int]?
     var templeNumber: Int?
+    
+    var currentTemple: Int?
+    var tapLabels: [String] = []
+    var tapColors: [UIColor] = []
+    
+    let noTapText = "Tap a bar to see its corresponding habit"
     
     @IBOutlet weak var modalWindow: UIView!
     @IBOutlet weak var barChart: HorizontalBarChartView!
@@ -25,6 +31,10 @@ class StatsViewController: UIViewController, ChartViewDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        pillarNameLabel.text = noTapText
+        
+        currentTemple = templeNumber
         
         modalWindow.layer.cornerRadius = 8
         modalWindow.clipsToBounds = true
@@ -34,10 +44,10 @@ class StatsViewController: UIViewController, ChartViewDelegate {
         barChart.xAxis.labelTextColor = UIColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 1.0)
         barChart.xAxis.labelFont = UIFont(name: "Roboto", size: 20)!
         barChart.legend.textColor = UIColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 1.0)
-//        barChart.backgroundColor = UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1.0)
-//        barChart.tintColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.0)
-//        barChart.gridBackgroundColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.0)
-//        barChart.borderColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.0)
+        //        barChart.backgroundColor = UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1.0)
+        //        barChart.tintColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.0)
+        //        barChart.gridBackgroundColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.0)
+        //        barChart.borderColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.0)
         barChart.xAxis.gridColor = UIColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 1.0)
         barChart.xAxis.axisLineColor = UIColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 1.0)
         barChart.animate(xAxisDuration: 1.0, yAxisDuration: 1.0)
@@ -45,38 +55,96 @@ class StatsViewController: UIViewController, ChartViewDelegate {
         barChart.leftAxis.enabled = false
         barChart.delegate = self
         
-        currentTempledbRef!.child("History").observeSingleEvent(of: .value, with: { (snapshot) in
-            let history = snapshot.value as? [String: Any]
+        db!.child(String(Auth.auth().currentUser!.uid)).observeSingleEvent(of: .value, with: { (snapshot) in
+            let userdb = snapshot.value as? [String: Any]
             
-            var currentDay = history!["CurrentDay"] as! Int
-            
+
             var names = [String]()
             var values = [[Double]]()
+            var colors = [UIColor]()
             
-            while currentDay > 0 {
-                let currentDayStr = "Day" + String(currentDay)
-                
-                let day = history![currentDayStr] as? [String: Any]
-                let dayTitle = day!["Date"] as! String
-                
-                var dayValuesArray = [Double]()
-                
-                for index in 1...5 {
-                    if (day!["P\(index)Completed"] as! String == "True") {
-                        dayValuesArray.append(1.0)
-                    } else {
-                        dayValuesArray.append(0.0)
-                    }
-                }
-                
-                names.append(dayTitle)
-                values.append(dayValuesArray)
-                
-                currentDay -= 1
+            for _ in 1...5 {
+                self.tapLabels.append(self.noTapText)
+                self.tapColors.append(.black)
             }
             
-            self.setChart(dataPoints: names, values: values)
+            for templeIter in 0...self.templeNumber!-1 {
+                
+                let templeWereIn = self.templeNumber! - templeIter
+                
+                let temple = userdb!["Temple\(templeWereIn)"] as? [String: Any]
+                
+                let history = temple!["History"] as? [String: Any]
+                let configuration = temple!["Configuration"] as? [String: Any]
+                
+                var currentDay = history!["CurrentDay"] as! Int
+                
+                var tempColors: [UIColor] = []
+                var tempLabels: [String] = []
+                for (_, pillarContents) in configuration! {
+                    let pillarDict = pillarContents as? [String: Any]
+                    let pillarColorDict = pillarDict!["Color"] as? [String: Any]
+                    colors.append(UIColor(red: pillarColorDict!["R"]! as! CGFloat, green: pillarColorDict!["G"]! as! CGFloat, blue: pillarColorDict!["B"]! as! CGFloat, alpha: 1))
+                    tempColors.append(UIColor(red: pillarColorDict!["R"]! as! CGFloat, green: pillarColorDict!["G"]! as! CGFloat, blue: pillarColorDict!["B"]! as! CGFloat, alpha: 1))
+                    
+                    tempLabels.append(pillarDict!["Skill"] as! String)
+                }
+                
+                tempColors.reverse()
+                tempLabels.reverse()
+                
+                for color in tempColors {
+                    self.tapColors.append(color)
+                }
+                for label in tempLabels {
+                    self.tapLabels.append(label)
+                }
 
+                while currentDay > 0 {
+                    let currentDayStr = "Day" + String(currentDay)
+
+                    let day = history![currentDayStr] as? [String: Any]
+                    let dayTitle = day!["Date"] as! String
+
+                    var dayValuesArray = [Double]()
+                    
+                    for _ in 1...templeWereIn {
+                        for _ in 1...5 {
+                            dayValuesArray.append(0.0)
+                        }
+                    }
+
+                    for index in 1...5 {
+                        if (day!["P\(index)Completed"] as! String == "True") {
+                            dayValuesArray.append(1.0)
+                        } else {
+                            dayValuesArray.append(0.0)
+                        }
+                    }
+                    
+                    for _ in 0...(self.templeNumber! - templeWereIn) {
+                        for _ in 1...5 {
+                            dayValuesArray.append(0.0)
+                        }
+                    }
+
+                    names.append(dayTitle)
+                    values.append(dayValuesArray)
+
+                    currentDay -= 1
+                }
+            
+            }
+            
+            for _ in 1...5 {
+                self.tapLabels.append(self.noTapText)
+                self.tapColors.append(.black)
+            }
+            
+            self.tapLabels.reverse()
+            self.tapColors.reverse()
+            
+            self.setChart(dataPoints: names, values: values, colors: colors)
         })
         
     }
@@ -93,7 +161,7 @@ class StatsViewController: UIViewController, ChartViewDelegate {
         performSegue(withIdentifier: "hideStatsModal", sender: self)
     }
     
-    func setChart(dataPoints: [String], values: [[Double]]) {
+    func setChart(dataPoints: [String], values: [[Double]], colors: [UIColor]) {
         let formatter = BarChartFormatter()
         formatter.setValues(values: dataPoints)
         let xaxis:XAxis = XAxis()
@@ -108,11 +176,7 @@ class StatsViewController: UIViewController, ChartViewDelegate {
         
         let chartDataSet = BarChartDataSet(entries: dataEntries, label: nil)
         
-        var myColors = [UIColor]()
-            for index in 0...4 {
-                myColors.append(pillarData![index].color)
-            }
-        chartDataSet.colors = myColors
+        chartDataSet.colors = colors
         
         chartDataSet.valueTextColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.0)
         let chartData = BarChartData(dataSet: chartDataSet)
@@ -137,12 +201,12 @@ class StatsViewController: UIViewController, ChartViewDelegate {
     
     func chartValueSelected(_ chartView: ChartViewBase, entry: ChartDataEntry, highlight: Highlight) {
         
-        let pillarIndex = highlight.stackIndex        
-        pillarNameLabel.text = pillarData![pillarIndex].title
-        pillarNameLabel.textColor = pillarData![pillarIndex].color
-
+        let pillarIndex = highlight.stackIndex
+        pillarNameLabel.text = tapLabels[pillarIndex]//String(pillarIndex % (5 * self.templeNumber!))
+        pillarNameLabel.textColor = tapColors[pillarIndex]
+        
     }
-
+    
 }
 
 @objc(BarChartFormatter)
@@ -157,4 +221,5 @@ public class BarChartFormatter: NSObject, IAxisValueFormatter {
         self.names = values
     }
 }
+
 

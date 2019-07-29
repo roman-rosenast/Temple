@@ -29,7 +29,7 @@ class Setup1VC: SetupStepVC {
         let pvc = self.parent as! SetupViewController
         if ( !pvc.isFirstTemple ) {
             headerLabel.text = "Setup Your Next Temple"
-            descriptionLabel.text = "Keep your habits or you can set new ones. You can still see your old Temple in the 'Temples' section and your progress in 'Stats' one."
+            descriptionLabel.text = "Keep your habits or you can set new ones. You can still see your old Temple in the 'Temples' section. Tap it to see your old stats."
         }
     }
     

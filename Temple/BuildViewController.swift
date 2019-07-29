@@ -51,6 +51,7 @@ class BuildViewController: UIViewController  {
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .vertical
         stackView.spacing = 40.0
+        
         scrollView.addSubview(stackView)
         
         scrollView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[stackView]|", options: NSLayoutConstraint.FormatOptions.alignAllCenterX, metrics: nil, views: ["stackView": stackView]))
@@ -61,7 +62,7 @@ class BuildViewController: UIViewController  {
     
         for iterator in 1...NUMBER_OF_TEMPLES {
             if (iterator < templeNumber!) {
-                stackView.addArrangedSubview(image("Temple\(iterator)-Thumbnail"))
+                stackView.addArrangedSubview(image("Temple\(iterator)-Thumbnail", tag: iterator))
             } else {
                 stackView.addArrangedSubview(image("Temple\(iterator)-Thumbnail", grayed: true))
             }
@@ -69,13 +70,27 @@ class BuildViewController: UIViewController  {
         stackView.addArrangedSubview(image("MoreTemplesComingSoon", grayed: true))
     }
     
-    func image(_ filename: String, grayed: Bool = false) -> UIImageView {
+//    @objc func tapDetectedOnTemple() {
+//        print("Temple ? Clicked")
+//    }
+    
+    func image(_ filename: String, grayed: Bool = false, tag: Int? = nil) -> UIImageView {
         var img = UIImage(named: filename)
         if grayed {
             img = UIImage(named: filename)!.convertToGrayScale().alpha(0.25)
         }
         
         let imgView = UIImageView(image: img)
+        
+//        if !grayed {
+        
+//            imgView.tag = tag!
+            
+//            // add tap handler for old stats
+//            let singleTap = UITapGestureRecognizer(target: self, action: #selector(tapDetectedOnTemple))
+//            imgView.isUserInteractionEnabled = true
+//            imgView.addGestureRecognizer(singleTap)
+//        }
         
         let width = scrollContainer.frame.width
         var height = scrollContainer.frame.width
@@ -122,6 +137,5 @@ extension UIImage {
 
         return UIImage(cgImage: CIContext(options:nil).createCGImage(filter.outputImage!, from: filter.outputImage!.extent)!)
     }
-
     
 }

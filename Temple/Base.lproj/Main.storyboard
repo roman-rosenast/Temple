@@ -119,8 +119,8 @@
                                             <rect key="frame" x="30" y="97" width="254" height="502"/>
                                             <color key="backgroundColor" white="0.94755993149999995" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </view>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tap a bar to see its corresponding habit" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PNi-sd-uBR">
-                                            <rect key="frame" x="25" y="636" width="264" height="20"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tap a bar to see its corresponding habit" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PNi-sd-uBR">
+                                            <rect key="frame" x="25.5" y="636" width="263.5" height="20"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="20" id="t5z-Aa-hbQ"/>
                                             </constraints>
@@ -1418,6 +1418,6 @@
         <image name="Temples-Icon-Small" width="25" height="25"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="Zbr-av-xmG"/>
+        <segue reference="0uF-mO-NpS"/>
     </inferredMetricsTieBreakers>
 </document>
