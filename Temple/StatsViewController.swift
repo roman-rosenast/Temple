@@ -23,7 +23,7 @@ class StatsViewController: UIViewController, ChartViewDelegate {
     var tapLabels: [String] = []
     var tapColors: [UIColor] = []
     
-    let noTapText = "Tap a bar to see its corresponding habit"
+    let noTapText = "Tap a bar to see\nits corresponding habit"
     
     @IBOutlet weak var modalWindow: UIView!
     @IBOutlet weak var barChart: HorizontalBarChartView!
@@ -75,18 +75,26 @@ class StatsViewController: UIViewController, ChartViewDelegate {
                 let temple = userdb!["Temple\(templeWereIn)"] as? [String: Any]
                 
                 let history = temple!["History"] as? [String: Any]
-                let configuration = temple!["Configuration"] as? [String: Any]
                 
                 var currentDay = history!["CurrentDay"] as! Int
                 
                 var tempColors: [UIColor] = []
                 var tempLabels: [String] = []
-                for (_, pillarContents) in configuration! {
-                    let pillarDict = pillarContents as? [String: Any]
+                var templeConfig = temple!["Configuration"]  as? [String: Any]
+                
+                for PillarKey in templeConfig! {
+                    templeConfig![String(PillarKey.key.suffix(1))] = PillarKey.value
+                    templeConfig![PillarKey.key] = nil
+                }
+                
+                let pillarDictSorted = templeConfig!.sorted(by: { $0.key < $1.key })
+                
+                for pillarContents in pillarDictSorted {
+                    let pillarDict = pillarContents.value as? [String: Any]
                     let pillarColorDict = pillarDict!["Color"] as? [String: Any]
                     colors.append(UIColor(red: pillarColorDict!["R"]! as! CGFloat, green: pillarColorDict!["G"]! as! CGFloat, blue: pillarColorDict!["B"]! as! CGFloat, alpha: 1))
                     tempColors.append(UIColor(red: pillarColorDict!["R"]! as! CGFloat, green: pillarColorDict!["G"]! as! CGFloat, blue: pillarColorDict!["B"]! as! CGFloat, alpha: 1))
-                    
+
                     tempLabels.append(pillarDict!["Skill"] as! String)
                 }
                 

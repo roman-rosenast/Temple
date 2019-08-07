@@ -385,7 +385,12 @@ class LoadingViewController: UIViewController {
                 //                 Done Updating Configuration
                 //                 Populate Streaks Array
                 
-                for index in 1...5 {
+                manualDbRef.observeSingleEvent(of: .value, with: { (snapshot) in
+                    
+                    var dataSnapshot = snapshot.value as? [String: Any]
+                    let history = dataSnapshot!["History"] as? [String: Any]
+                
+                    for index in 1...5 {
                     
                     let skillBool = "P" + String(index) + "Completed"
                     
@@ -411,13 +416,14 @@ class LoadingViewController: UIViewController {
                     
                     self.streaks.append(currentStreak)
                     
-                }
-                
-                //                  Done Populating Streaks Array
-                
-                self.templeNumber = Int(snapshot.key.filter { "0"..."9" ~= $0 })!
-                
-                completion((self.pillarData, self.dailyChecklist, self.streaks, self.templeNumber))
+                    }
+                    
+                    //                  Done Populating Streaks Array
+                    
+                    self.templeNumber = Int(snapshot.key.filter { "0"..."9" ~= $0 })!
+                    
+                    completion((self.pillarData, self.dailyChecklist, self.streaks, self.templeNumber))
+                })
                 
             })
         })

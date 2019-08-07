@@ -110,19 +110,19 @@
                                     <rect key="frame" x="50" y="100" width="314" height="696"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Stats" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Cdr-NO-6Or">
-                                            <rect key="frame" x="130" y="40" width="54" height="27"/>
+                                            <rect key="frame" x="130" y="40" width="54" height="30"/>
                                             <fontDescription key="fontDescription" name="Roboto-Bold" family="Roboto" pointSize="23"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XUe-dV-PYv" customClass="HorizontalBarChartView" customModule="Charts">
-                                            <rect key="frame" x="30" y="97" width="254" height="502"/>
+                                            <rect key="frame" x="30" y="100" width="254" height="496"/>
                                             <color key="backgroundColor" white="0.94755993149999995" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </view>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tap a bar to see its corresponding habit" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PNi-sd-uBR">
-                                            <rect key="frame" x="25.5" y="636" width="263.5" height="20"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tap a bar to see\nits corresponding habit" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="4" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PNi-sd-uBR">
+                                            <rect key="frame" x="20" y="626" width="274" height="40"/>
                                             <constraints>
-                                                <constraint firstAttribute="height" constant="20" id="t5z-Aa-hbQ"/>
+                                                <constraint firstAttribute="height" constant="40" id="t5z-Aa-hbQ"/>
                                             </constraints>
                                             <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="15"/>
                                             <nil key="textColor"/>
@@ -134,11 +134,13 @@
                                         <constraint firstItem="XUe-dV-PYv" firstAttribute="leading" secondItem="RaG-qh-mM5" secondAttribute="leading" constant="30" id="7S7-xo-dZC"/>
                                         <constraint firstItem="XUe-dV-PYv" firstAttribute="top" secondItem="Cdr-NO-6Or" secondAttribute="bottom" constant="30" id="8jn-fm-Ptd"/>
                                         <constraint firstItem="Cdr-NO-6Or" firstAttribute="top" secondItem="RaG-qh-mM5" secondAttribute="top" constant="40" id="9az-Pw-CYu"/>
-                                        <constraint firstAttribute="bottom" secondItem="PNi-sd-uBR" secondAttribute="bottom" constant="40" id="HHc-kG-5TT"/>
+                                        <constraint firstAttribute="trailing" secondItem="PNi-sd-uBR" secondAttribute="trailing" constant="20" id="DnB-A1-neQ"/>
+                                        <constraint firstAttribute="bottom" secondItem="PNi-sd-uBR" secondAttribute="bottom" constant="30" id="HHc-kG-5TT"/>
                                         <constraint firstItem="PNi-sd-uBR" firstAttribute="top" relation="greaterThanOrEqual" secondItem="XUe-dV-PYv" secondAttribute="bottom" constant="30" id="O4n-eu-L5Q"/>
                                         <constraint firstItem="XUe-dV-PYv" firstAttribute="centerY" secondItem="RaG-qh-mM5" secondAttribute="centerY" id="Pl9-3A-EAE"/>
                                         <constraint firstAttribute="trailing" secondItem="XUe-dV-PYv" secondAttribute="trailing" constant="30" id="Tnr-pI-bjv"/>
                                         <constraint firstItem="PNi-sd-uBR" firstAttribute="centerX" secondItem="RaG-qh-mM5" secondAttribute="centerX" id="mhC-1p-JJn"/>
+                                        <constraint firstItem="PNi-sd-uBR" firstAttribute="leading" secondItem="RaG-qh-mM5" secondAttribute="leading" constant="20" id="oxp-jW-IvX"/>
                                         <constraint firstItem="Cdr-NO-6Or" firstAttribute="centerX" secondItem="RaG-qh-mM5" secondAttribute="centerX" id="rar-vU-AZ7"/>
                                     </constraints>
                                 </view>
@@ -972,7 +974,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Kmx-cV-yIl">
-                                                    <rect key="frame" x="0.0" y="0.0" width="314" height="100"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="314" height="101"/>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 </view>
                                                 <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progressViewStyle="bar" translatesAutoresizingMaskIntoConstraints="NO" id="e8A-Ty-Wbr">
@@ -1010,13 +1012,13 @@
                                             <constraints>
                                                 <constraint firstItem="saf-az-0Ot" firstAttribute="centerY" secondItem="960-yo-omI" secondAttribute="centerY" id="31f-qw-YUb"/>
                                                 <constraint firstItem="e8A-Ty-Wbr" firstAttribute="top" secondItem="960-yo-omI" secondAttribute="top" constant="1" id="3Bv-2F-33W"/>
-                                                <constraint firstAttribute="bottom" secondItem="Kmx-cV-yIl" secondAttribute="bottom" id="7N0-Ro-QwB"/>
                                                 <constraint firstItem="saf-az-0Ot" firstAttribute="leading" secondItem="zV3-Eg-ZXy" secondAttribute="trailing" constant="15" id="A4P-N5-4L9"/>
                                                 <constraint firstAttribute="trailingMargin" secondItem="saf-az-0Ot" secondAttribute="trailing" constant="25" id="FOC-aI-Ybk"/>
                                                 <constraint firstAttribute="bottom" secondItem="e8A-Ty-Wbr" secondAttribute="bottom" constant="1" id="MME-ay-Ngy"/>
                                                 <constraint firstItem="Kmx-cV-yIl" firstAttribute="top" secondItem="960-yo-omI" secondAttribute="top" id="WPQ-j2-TnS"/>
                                                 <constraint firstItem="GPj-WZ-Gh4" firstAttribute="centerY" secondItem="960-yo-omI" secondAttribute="centerY" id="e6a-F3-HjJ"/>
                                                 <constraint firstItem="e8A-Ty-Wbr" firstAttribute="leading" secondItem="960-yo-omI" secondAttribute="leading" constant="15" id="f2R-kD-QLV"/>
+                                                <constraint firstAttribute="bottom" secondItem="Kmx-cV-yIl" secondAttribute="bottom" constant="-1" id="fCN-Iv-1Uz"/>
                                                 <constraint firstItem="zV3-Eg-ZXy" firstAttribute="leading" secondItem="GPj-WZ-Gh4" secondAttribute="trailing" constant="15" id="gsP-Om-DPU"/>
                                                 <constraint firstItem="GPj-WZ-Gh4" firstAttribute="leading" secondItem="960-yo-omI" secondAttribute="leadingMargin" constant="15" id="j7m-iS-gee"/>
                                                 <constraint firstAttribute="trailing" secondItem="e8A-Ty-Wbr" secondAttribute="trailing" constant="15" id="rxh-Vd-sUE"/>
@@ -1363,13 +1365,13 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Temple-Background-Only" translatesAutoresizingMaskIntoConstraints="NO" id="loq-4z-ZiN">
-                                <rect key="frame" x="50" y="291" width="314" height="314"/>
+                                <rect key="frame" x="50" y="280.5" width="314" height="314"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="loq-4z-ZiN" secondAttribute="height" multiplier="1:1" id="eI6-jZ-UUs"/>
                                 </constraints>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Aln-xJ-LYY">
-                                <rect key="frame" x="107" y="428" width="200" height="40"/>
+                                <rect key="frame" x="107" y="417.5" width="200" height="40"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="40" id="7CW-MD-imO"/>
@@ -1395,8 +1397,7 @@
                             <constraint firstItem="Aln-xJ-LYY" firstAttribute="centerY" secondItem="loq-4z-ZiN" secondAttribute="centerY" id="NkW-Dd-MCj"/>
                             <constraint firstItem="FL2-TM-LRC" firstAttribute="trailing" secondItem="gix-yR-nFx" secondAttribute="trailing" constant="25" id="R3P-PP-i4F"/>
                             <constraint firstItem="k4e-SE-78C" firstAttribute="centerX" secondItem="cQp-TZ-kcC" secondAttribute="centerX" id="Szo-Nt-suW"/>
-                            <constraint firstItem="loq-4z-ZiN" firstAttribute="top" relation="greaterThanOrEqual" secondItem="gix-yR-nFx" secondAttribute="bottom" constant="50" id="dtM-QE-X5c"/>
-                            <constraint firstItem="loq-4z-ZiN" firstAttribute="centerY" secondItem="cQp-TZ-kcC" secondAttribute="centerY" id="qNz-1p-paL"/>
+                            <constraint firstItem="loq-4z-ZiN" firstAttribute="top" secondItem="gix-yR-nFx" secondAttribute="bottom" constant="50" id="dtM-QE-X5c"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="FL2-TM-LRC"/>
                     </view>
@@ -1418,6 +1419,6 @@
         <image name="Temples-Icon-Small" width="25" height="25"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="0uF-mO-NpS"/>
+        <segue reference="CA2-7w-16R"/>
     </inferredMetricsTieBreakers>
 </document>
